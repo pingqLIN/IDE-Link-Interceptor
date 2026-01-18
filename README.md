@@ -1,10 +1,10 @@
-# VS Code IDE Switcher
+# IDE Link Interceptor
 
 [中文版](README.zh-TW.md)
 
-[![CI](https://github.com/pingqLIN/vscode-antigravity-linker/actions/workflows/ci.yml/badge.svg)](https://github.com/pingqLIN/vscode-antigravity-linker/actions/workflows/ci.yml)
+[![CI](https://github.com/pingqLIN/ide-link-interceptor/actions/workflows/ci.yml/badge.svg)](https://github.com/pingqLIN/ide-link-interceptor/actions/workflows/ci.yml)
 
-A Chrome extension that intercepts VS Code links (`vscode://`) and lets you choose which IDE to open them with.
+A browser extension that intercepts IDE hyperlinks (`vscode://`, `cursor://`, `windsurf://`) from web pages and lets you choose which IDE to open them with.
 
 ## Supported IDEs
 
@@ -27,17 +27,18 @@ A Chrome extension that intercepts VS Code links (`vscode://`) and lets you choo
 
 1. Click the extension icon in the toolbar
 2. Select your target IDE from the popup
-3. All VS Code links will now open in your selected IDE
+3. All IDE hyperlinks will now open in your selected IDE
 
 ## File Structure
 
 ```
-vscode-antigravity-linker/
+ide-link-interceptor/
 ├── manifest.json    # Extension configuration
 ├── content.js       # Link interception script
 ├── popup.html       # Popup interface
 ├── popup.css        # Popup styles
 ├── popup.js         # Popup logic
+├── background.js    # Background service worker
 ├── icons/           # Extension icons
 └── docs/            # Development documentation
 ```
