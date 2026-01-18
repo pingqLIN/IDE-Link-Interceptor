@@ -1,12 +1,14 @@
 # VS Code IDE Switcher
 
+[中文版](README.zh-TW.md)
+
 [![CI](https://github.com/pingqLIN/vscode-antigravity-linker/actions/workflows/ci.yml/badge.svg)](https://github.com/pingqLIN/vscode-antigravity-linker/actions/workflows/ci.yml)
 
-Chrome 擴充功能，攔截 VS Code 連結（`vscode://`），讓你選擇要用哪個 IDE 開啟。
+A Chrome extension that intercepts VS Code links (`vscode://`) and lets you choose which IDE to open them with.
 
-## 支援的 IDE
+## Supported IDEs
 
-| IDE              | 協議                 |
+| IDE              | Protocol             |
 | ---------------- | -------------------- |
 | VS Code          | `vscode://`          |
 | VS Code Insiders | `vscode-insiders://` |
@@ -14,33 +16,33 @@ Chrome 擴充功能，攔截 VS Code 連結（`vscode://`），讓你選擇要�
 | Cursor           | `cursor://`          |
 | Windsurf         | `windsurf://`        |
 
-## 安裝
+## Installation
 
-1. Chrome 網址列輸入 `chrome://extensions/`
-2. 開啟右上角「**開發人員模式**」
-3. 點擊「**載入未封裝項目**」
-4. 選擇此資料夾
+1. Navigate to `chrome://extensions/` in Chrome
+2. Enable "**Developer mode**" in the top right corner
+3. Click "**Load unpacked**"
+4. Select this folder
 
-## 使用方式
+## Usage
 
-1. 點擊工具列的擴充功能圖示
-2. 從 Popup 選擇目標 IDE
-3. 之後點擊任何 VS Code 連結都會導向選擇的 IDE
+1. Click the extension icon in the toolbar
+2. Select your target IDE from the popup
+3. All VS Code links will now open in your selected IDE
 
-## 檔案結構
+## File Structure
 
 ```
 vscode-antigravity-linker/
-├── manifest.json    # 擴充功能配置
-├── content.js       # 連結攔截腳本
-├── popup.html       # Popup 介面
-├── popup.css        # Popup 樣式
-├── popup.js         # Popup 邏輯
-├── icons/           # 擴充功能圖示
-└── docs/            # 開發文件
+├── manifest.json    # Extension configuration
+├── content.js       # Link interception script
+├── popup.html       # Popup interface
+├── popup.css        # Popup styles
+├── popup.js         # Popup logic
+├── icons/           # Extension icons
+└── docs/            # Development documentation
 ```
 
-## 測試
+## Testing
 
 - [GitHub MCP](https://github.com/mcp)
 - [VS Code Marketplace](https://marketplace.visualstudio.com/)
@@ -49,51 +51,51 @@ vscode-antigravity-linker/
 
 MIT
 
-## 開發
+## Development
 
-### 設定開發環境
+### Setting up the Development Environment
 
 ```bash
-# 安裝依賴
+# Install dependencies
 npm install
 
-# 執行程式碼檢查
+# Run linting
 npm run lint
 
-# 自動修正程式碼風格
+# Auto-fix code style
 npm run lint:fix
 
-# 驗證 manifest.json
+# Validate manifest.json
 npm run validate
 
-# 打包擴充功能
+# Package the extension
 npm run package
 ```
 
-### CI/CD 流程
+### CI/CD Workflow
 
-本專案使用 GitHub Actions 進行自動化建置與部署：
+This project uses GitHub Actions for automated builds and deployment:
 
-#### CI 流程 (每次 Push 和 PR)
-1. **程式碼檢查** - 使用 ESLint 檢查程式碼品質
-2. **Manifest 驗證** - 驗證 manifest.json 結構和檔案完整性
-3. **打包** - 自動打包擴充功能為 .zip 檔案
-4. **上傳 Artifacts** - 將打包檔案上傳至 GitHub Actions artifacts
+#### CI Workflow (on every Push and PR)
+1. **Code Linting** - Use ESLint to check code quality
+2. **Manifest Validation** - Validate manifest.json structure and file integrity
+3. **Packaging** - Automatically package the extension as a .zip file
+4. **Upload Artifacts** - Upload the packaged file to GitHub Actions artifacts
 
-#### Release 流程 (推送版本標籤時)
-當推送版本標籤（如 `v1.3.0`）時：
-1. 執行所有 CI 檢查
-2. 打包擴充功能
-3. 自動建立 GitHub Release
-4. 將打包檔案附加至 Release
+#### Release Workflow (when pushing version tags)
+When pushing a version tag (e.g., `v1.3.0`):
+1. Run all CI checks
+2. Package the extension
+3. Automatically create a GitHub Release
+4. Attach the packaged file to the Release
 
-**建立新版本：**
+**Creating a new release:**
 ```bash
-# 確保 manifest.json 中的版本號已更新
+# Make sure the version number in manifest.json is updated
 git tag v1.3.0
 git push origin v1.3.0
 ```
 
-### 工作流程檔案
-- `.github/workflows/ci.yml` - 持續整合流程
-- `.github/workflows/release.yml` - 自動發布流程
+### Workflow Files
+- `.github/workflows/ci.yml` - Continuous integration workflow
+- `.github/workflows/release.yml` - Automated release workflow
