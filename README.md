@@ -18,21 +18,21 @@ A browser extension that intercepts IDE hyperlinks (`vscode://`, `cursor://`, `w
 
 ### Popup Interface
 <p align="center">
-  <img src="docs/screenshot-popup.png" alt="Popup Interface" width="300"/>
+  <img src="https://github.com/pingqLIN/IDE-Link-Interceptor/blob/master/docs/screenshot-popup.png" alt="Popup Interface" width="300"/>
 </p>
 
 *Click the extension icon to select your preferred IDE*
 
 ### Context Menu Integration
 <p align="center">
-  <img src="docs/screenshot-context-menu.png" alt="Context Menu" width="650"/>
+  <img src="https://github.com/pingqLIN/IDE-Link-Interceptor/blob/master/docs/screenshot-context-menu.png" alt="Context Menu" width="650"/>
 </p>
 
 *Right-click on any link to choose your target IDE*
 
 ### Before: Browser Protocol Prompt
 <p align="center">
-  <img src="docs/screenshot-intercept.png" alt="Protocol Interception" width="650"/>
+  <img src="https://github.com/pingqLIN/IDE-Link-Interceptor/blob/master/docs/screenshot-intercept.png" alt="Protocol Interception" width="650"/>
 </p>
 
 *Without the extension: annoying browser prompts every time*
