@@ -38,10 +38,10 @@ try {
     isValid = false;
   }
 
-  // Validate version format (semver)
-  const versionRegex = /^\d+\.\d+\.\d+$/;
+  // Validate version format (semver - basic check)
+  const versionRegex = /^\d+\.\d+\.\d+(-[\w.]+)?(\+[\w.]+)?$/;
   if (!versionRegex.test(manifest.version)) {
-    console.error('❌ Version must follow semver format (e.g., 1.0.0)');
+    console.error('❌ Version must follow semver format (e.g., 1.0.0, 1.0.0-beta, 1.0.0+build)');
     isValid = false;
   }
 
