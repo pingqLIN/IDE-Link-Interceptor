@@ -2,7 +2,7 @@
 
 [中文版](README.zh-TW.md)
 
-[![CI](https://github.com/pingqLIN/IDE-Link-Interceptor/actions/workflows/ci.yml/badge.svg)](https://github.com/pingqLIN/IDE-Link-Interceptor/actions/workflows/ci.yml)
+[![CI](https://github.com/pingqLIN/vscode-antigravity-linker/actions/workflows/ci.yml/badge.svg)](https://github.com/pingqLIN/vscode-antigravity-linker/actions/workflows/ci.yml)
 
 A browser extension that intercepts IDE hyperlinks (`vscode://`, `cursor://`, `windsurf://`) from web pages and lets you choose which IDE to open them with.
 
@@ -17,35 +17,38 @@ A browser extension that intercepts IDE hyperlinks (`vscode://`, `cursor://`, `w
 ## 📸 Screenshots
 
 ### Popup Interface
+
 <p align="center">
   <img src="docs/screenshot-popup.png" alt="Popup Interface" width="300"/>
 </p>
 
-*Click the extension icon to select your preferred IDE*
+_Click the extension icon to select your preferred IDE_
 
 ### Context Menu Integration
+
 <p align="center">
   <img src="docs/screenshot-context-menu.png" alt="Context Menu" width="650"/>
 </p>
 
-*Right-click on any link to choose your target IDE*
+_Right-click on any link to choose your target IDE_
 
 ### Before: Browser Protocol Prompt
+
 <p align="center">
   <img src="docs/screenshot-intercept.png" alt="Protocol Interception" width="650"/>
 </p>
 
-*Without the extension: annoying browser prompts every time*
+_Without the extension: annoying browser prompts every time_
 
 ## 🎯 Supported IDEs
 
-| IDE              | Protocol             | Description          |
-| ---------------- | -------------------- | -------------------- |
-| VS Code          | `vscode://`          | Official stable      |
-| VS Code Insiders | `vscode-insiders://` | Preview release      |
-| Antigravity      | `antigravity://`     | Antigravity IDE      |
-| Cursor           | `cursor://`          | AI-first IDE         |
-| Windsurf         | `windsurf://`        | Codeium IDE          |
+| IDE              | Protocol             | Description     |
+| ---------------- | -------------------- | --------------- |
+| VS Code          | `vscode://`          | Official stable |
+| VS Code Insiders | `vscode-insiders://` | Preview release |
+| Antigravity      | `antigravity://`     | Antigravity IDE |
+| Cursor           | `cursor://`          | AI-first IDE    |
+| Windsurf         | `windsurf://`        | Codeium IDE     |
 
 ## 📦 Installation
 
@@ -138,19 +141,23 @@ npm run package
 This project uses GitHub Actions for automated builds and deployment:
 
 #### CI Workflow (on every Push and PR)
+
 1. **Code Linting** - Use ESLint to check code quality
 2. **Manifest Validation** - Validate manifest.json structure and file integrity
 3. **Packaging** - Automatically package the extension as a `.zip` file
 4. **Upload Artifacts** - Upload the packaged file to GitHub Actions artifacts
 
 #### Release Workflow (when pushing version tags)
+
 When pushing a version tag (e.g., `v1.3.0`):
+
 1. Run all CI checks
 2. Package the extension
 3. Automatically create a GitHub Release
 4. Attach the packaged file to the Release
 
 **Creating a new release:**
+
 ```bash
 # Make sure the version number in manifest.json is updated
 git tag v1.3.0
@@ -158,6 +165,7 @@ git push origin v1.3.0
 ```
 
 ### Workflow Files
+
 - `.github/workflows/ci.yml` - Continuous integration workflow
 - `.github/workflows/release.yml` - Automated release workflow
 
