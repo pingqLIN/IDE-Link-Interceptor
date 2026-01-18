@@ -2,34 +2,103 @@
 
 [中文版](README.zh-TW.md)
 
-[![CI](https://github.com/pingqLIN/ide-link-interceptor/actions/workflows/ci.yml/badge.svg)](https://github.com/pingqLIN/ide-link-interceptor/actions/workflows/ci.yml)
+[![CI](https://github.com/pingqLIN/IDE-Link-Interceptor/actions/workflows/ci.yml/badge.svg)](https://github.com/pingqLIN/IDE-Link-Interceptor/actions/workflows/ci.yml)
 
 A browser extension that intercepts IDE hyperlinks (`vscode://`, `cursor://`, `windsurf://`) from web pages and lets you choose which IDE to open them with.
 
-## Supported IDEs
+## ✨ Features
 
-| IDE              | Protocol             |
-| ---------------- | -------------------- |
-| VS Code          | `vscode://`          |
-| VS Code Insiders | `vscode-insiders://` |
-| Antigravity      | `antigravity://`     |
-| Cursor           | `cursor://`          |
-| Windsurf         | `windsurf://`        |
+- 🔗 **Intercept IDE Protocol Links** - Captures `vscode://`, `cursor://`, `windsurf://` and other IDE protocol links from web pages
+- 🎯 **Choose Your IDE** - Select your preferred IDE from a convenient popup or context menu
+- 🚀 **No Browser Prompts** - Eliminates the "Open Visual Studio Code?" dialog
+- 📦 **VSIX Support** - Right-click on `.vsix` files to install directly in your chosen IDE
+- 💾 **Remember Your Choice** - Your IDE selection is saved and persists across browsing sessions
 
-## Installation
+## 📸 Screenshots
 
-1. Navigate to `chrome://extensions/` in Chrome
+### Popup Interface
+<p align="center">
+  <img src="docs/screenshot-popup.png" alt="Popup Interface" width="300"/>
+</p>
+
+*Click the extension icon to select your preferred IDE*
+
+### Context Menu Integration
+<p align="center">
+  <img src="docs/screenshot-context-menu.png" alt="Context Menu" width="650"/>
+</p>
+
+*Right-click on any link to choose your target IDE*
+
+### Before: Browser Protocol Prompt
+<p align="center">
+  <img src="docs/screenshot-intercept.png" alt="Protocol Interception" width="650"/>
+</p>
+
+*Without the extension: annoying browser prompts every time*
+
+## 🎯 Supported IDEs
+
+| IDE              | Protocol             | Description          |
+| ---------------- | -------------------- | -------------------- |
+| VS Code          | `vscode://`          | Official stable      |
+| VS Code Insiders | `vscode-insiders://` | Preview release      |
+| Antigravity      | `antigravity://`     | Antigravity IDE      |
+| Cursor           | `cursor://`          | AI-first IDE         |
+| Windsurf         | `windsurf://`        | Codeium IDE          |
+
+## 📦 Installation
+
+### Chrome / Edge
+
+1. Navigate to `chrome://extensions/` (or `edge://extensions/` for Edge)
 2. Enable "**Developer mode**" in the top right corner
 3. Click "**Load unpacked**"
-4. Select this folder
+4. Select the extension folder
 
-## Usage
+### From Source
 
-1. Click the extension icon in the toolbar
-2. Select your target IDE from the popup
-3. All IDE hyperlinks will now open in your selected IDE
+```bash
+# Clone the repository
+git clone https://github.com/pingqLIN/IDE-Link-Interceptor.git
+cd IDE-Link-Interceptor
 
-## File Structure
+# Install dependencies
+npm install
+
+# Validate the extension
+npm run validate
+```
+
+## 🚀 Usage
+
+### Method 1: Extension Popup
+
+1. Click the extension icon in the browser toolbar
+2. Select your target IDE from the list
+3. Your choice is automatically saved
+
+### Method 2: Context Menu
+
+1. Right-click on any link or page
+2. Hover over "🔗 選擇目標 IDE"
+3. Select your preferred IDE
+
+### Method 3: VSIX Files
+
+1. Right-click on a `.vsix` download link
+2. Click "📦 用 [Your IDE] 安裝此擴充套件"
+3. The extension will be installed in your chosen IDE
+
+## 🧪 Testing
+
+Try these websites to test the extension:
+
+- [GitHub MCP](https://github.com/mcp) - Click "Install MCP server" buttons
+- [VS Code Marketplace](https://marketplace.visualstudio.com/) - Click extension "Install" buttons
+- [Open VSX Registry](https://open-vsx.org/) - Download `.vsix` files
+
+## 📁 File Structure
 
 ```
 ide-link-interceptor/
@@ -43,16 +112,7 @@ ide-link-interceptor/
 └── docs/            # Development documentation
 ```
 
-## Testing
-
-- [GitHub MCP](https://github.com/mcp)
-- [VS Code Marketplace](https://marketplace.visualstudio.com/)
-
-## License
-
-MIT
-
-## Development
+## 🛠️ Development
 
 ### Setting up the Development Environment
 
@@ -80,7 +140,7 @@ This project uses GitHub Actions for automated builds and deployment:
 #### CI Workflow (on every Push and PR)
 1. **Code Linting** - Use ESLint to check code quality
 2. **Manifest Validation** - Validate manifest.json structure and file integrity
-3. **Packaging** - Automatically package the extension as a .zip file
+3. **Packaging** - Automatically package the extension as a `.zip` file
 4. **Upload Artifacts** - Upload the packaged file to GitHub Actions artifacts
 
 #### Release Workflow (when pushing version tags)
@@ -100,3 +160,19 @@ git push origin v1.3.0
 ### Workflow Files
 - `.github/workflows/ci.yml` - Continuous integration workflow
 - `.github/workflows/release.yml` - Automated release workflow
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+MIT
+
+## 🙏 Acknowledgments
+
+This extension was created to streamline the workflow of developers who use multiple IDE variants and want seamless control over protocol link handling.
+
+---
+
+<p align="center">Made with ❤️ by <a href="https://github.com/pingqLIN">pingqLIN</a></p>
