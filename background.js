@@ -3,8 +3,8 @@ const DEFAULT_PROTOCOL = "antigravity";
 
 // IDE 選項配置
 const IDE_OPTIONS = [
-  { id: "vscode", name: "VS Code", desc: "官方穩定版" },
-  { id: "vscode-insiders", name: "VS Code Insiders", desc: "開發預覽版" },
+  { id: "vscode", name: "VS Code", desc: "Official stable" },
+  { id: "vscode-insiders", name: "VS Code Insiders", desc: "Preview release" },
   { id: "antigravity", name: "Antigravity", desc: "Antigravity IDE" },
   { id: "cursor", name: "Cursor", desc: "AI-first IDE" },
   { id: "windsurf", name: "Windsurf", desc: "Codeium IDE" },
@@ -35,7 +35,7 @@ async function createContextMenus() {
     // ============ VSIX 連結專用選單 ============
     chrome.contextMenus.create({
       id: "install-vsix",
-      title: `📦 用 ${ideName} 安裝此擴充套件`,
+      title: chrome.i18n.getMessage("menuInstallVsix", [ideName]),
       contexts: ["link"],
       targetUrlPatterns: ["*://*/*.vsix", "*://*/*.vsix?*"]
     });
@@ -43,7 +43,7 @@ async function createContextMenus() {
     // ============ IDE 選擇選單 ============
     chrome.contextMenus.create({
       id: "ide-switcher-parent",
-      title: "🔗 選擇目標 IDE",
+      title: chrome.i18n.getMessage("menuSelectIde"),
       contexts: ["page", "link", "selection"],
     });
 
@@ -74,7 +74,7 @@ async function updateMenuCheckState() {
 
     // 更新 VSIX 安裝選單標題
     chrome.contextMenus.update("install-vsix", {
-      title: `📦 用 ${ideName} 安裝此擴充套件`
+      title: chrome.i18n.getMessage("menuInstallVsix", [ideName])
     });
 
     // 更新 radio 狀態
@@ -84,7 +84,7 @@ async function updateMenuCheckState() {
       });
     });
   } catch (error) {
-    console.error("[IDE Switcher] 更新選單狀態失敗:", error);
+    console.error("[IDE Switcher] Failed to update menu state:", error);
   }
 }
 
@@ -135,12 +135,12 @@ async function handleMenuClick(info, tab) {
     const extInfo = parseExtensionFromVsixUrl(info.linkUrl);
     if (extInfo) {
       const protocolUrl = `${protocol}:extension/${extInfo.publisher}.${extInfo.name}`;
-      console.log(`[IDE Switcher] 安裝擴充套件: ${protocolUrl}`);
+      console.log(`[IDE Switcher] Installing extension: ${protocolUrl}`);
       
       // 在目前分頁觸發協議
       chrome.tabs.update(tab.id, { url: protocolUrl });
     } else {
-      console.warn("[IDE Switcher] 無法解析擴充套件資訊:", info.linkUrl);
+      console.warn("[IDE Switcher] Unable to parse extension info:", info.linkUrl);
     }
     return;
   }
@@ -151,19 +151,19 @@ async function handleMenuClick(info, tab) {
 
     try {
       await chrome.storage.sync.set({ [STORAGE_KEY]: protocol });
-      console.log(`[IDE Switcher] 已切換至: ${protocol}`);
+      console.log(`[IDE Switcher] Switched to: ${protocol}`);
 
       // 更新選單狀態
       await updateMenuCheckState();
     } catch (error) {
-      console.error("[IDE Switcher] 儲存設定失敗:", error);
+      console.error("[IDE Switcher] Failed to save settings:", error);
     }
   }
 }
 
 // 監聽擴充功能安裝/更新
 chrome.runtime.onInstalled.addListener(() => {
-  console.log("[IDE Switcher] 擴充功能已安裝/更新");
+  console.log("[IDE Switcher] Extension installed/updated");
   createContextMenus();
 });
 

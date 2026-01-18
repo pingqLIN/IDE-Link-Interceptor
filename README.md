@@ -84,13 +84,15 @@ npm run validate
 ### Method 2: Context Menu
 
 1. Right-click on any link or page
-2. Hover over "🔗 選擇目標 IDE"
+2. Hover over "🔗 Select Target IDE" (or "🔗 選擇目標 IDE" in Chinese)
 3. Select your preferred IDE
+
+> **Note:** The extension automatically displays menu text in English or Traditional Chinese based on your browser's language settings.
 
 ### Method 3: VSIX Files
 
 1. Right-click on a `.vsix` download link
-2. Click "📦 用 [Your IDE] 安裝此擴充套件"
+2. Click "📦 Install extension with [IDE Name]"
 3. The extension will be installed in your chosen IDE
 
 ## 🧪 Testing

@@ -87,20 +87,7 @@
     const warningEl = document.getElementById('warning-msg');
     if (!warningEl) return;
 
-    const lang = navigator.language;
-    let message = 'No reaction if program is not installed'; // 預設英文
-
-    if (lang.startsWith('zh')) {
-        // 先判斷是否為繁體
-        if (lang === 'zh-TW' || lang === 'zh-HK' || lang === 'zh-Hant') {
-             message = '若沒有安裝程式點選將不會有反應';
-        } else {
-             // 其他中文預設為簡體
-             message = '若没有安装程序点击将不会有反应';
-        }
-    }
-
-    warningEl.textContent = message;
+    warningEl.textContent = chrome.i18n.getMessage("warningNotInstalled");
   }
 
   /**

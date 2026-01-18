@@ -1,0 +1,32 @@
+{
+    "extName": {
+        "message": "IDE 連結攔截器",
+        "description": "Extension name"
+    },
+    "extDescription": {
+        "message": "瀏覽器擴充功能，攔截 IDE 協議連結（vscode://、cursor://、windsurf://），讓你選擇要用哪個 IDE 開啟",
+        "description": "Extension description"
+    },
+    "actionTitle": {
+        "message": "選擇 IDE",
+        "description": "Action button title"
+    },
+    "menuSelectIde": {
+        "message": "🔗 選擇目標 IDE",
+        "description": "Context menu title for IDE selection"
+    },
+    "menuInstallVsix": {
+        "message": "📦 用 $IDE_NAME$ 安裝此擴充套件",
+        "description": "Context menu title for VSIX installation",
+        "placeholders": {
+            "ide_name": {
+                "content": "$1",
+                "example": "VS Code"
+            }
+        }
+    },
+    "warningNotInstalled": {
+        "message": "若程式未安裝則不會有反應",
+        "description": "Warning message in popup footer"
+    }
+}

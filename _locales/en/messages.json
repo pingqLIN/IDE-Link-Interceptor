@@ -1,0 +1,32 @@
+{
+    "extName": {
+        "message": "IDE Link Interceptor",
+        "description": "Extension name"
+    },
+    "extDescription": {
+        "message": "Browser extension that intercepts IDE hyperlinks (vscode://, cursor://, windsurf://) and lets you choose which IDE to open them with",
+        "description": "Extension description"
+    },
+    "actionTitle": {
+        "message": "Select IDE",
+        "description": "Action button title"
+    },
+    "menuSelectIde": {
+        "message": "🔗 Select Target IDE",
+        "description": "Context menu title for IDE selection"
+    },
+    "menuInstallVsix": {
+        "message": "📦 Install extension with $IDE_NAME$",
+        "description": "Context menu title for VSIX installation",
+        "placeholders": {
+            "ide_name": {
+                "content": "$1",
+                "example": "VS Code"
+            }
+        }
+    },
+    "warningNotInstalled": {
+        "message": "No reaction if program is not installed",
+        "description": "Warning message in popup footer"
+    }
+}
