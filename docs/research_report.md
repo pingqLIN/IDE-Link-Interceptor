@@ -1,6 +1,6 @@
 # VS Code 衍生應用程式與擴充套件來源調查報告
 
-這份報告整理了目前主流的 VS Code 相關衍生 IDE 以及擴充套件軟體網站，並針對我們正在開發的 `vscode-antigravity-linker` 專案進行了相容性評估。
+這份報告整理了目前主流的 VS Code 相關衍生 IDE 以及擴充套件軟體網站，並針對我們正在開發的 `vscode-ide-switcher` 專案進行了相容性評估。
 
 ## 1. 擴充套件來源網站列表
 
@@ -17,7 +17,7 @@
 
 ## 2. 專案相容性檢查結論
 
-針對我們目前開發的 `vscode-antigravity-linker`（VS Code IDE Switcher），檢查結果如下：
+針對我們目前開發的 `vscode-ide-switcher`（VS Code IDE Switcher），檢查結果如下：
 
 ### ✅ 完全相容（目前已支援）
 

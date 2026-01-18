@@ -1,6 +1,6 @@
 # VS Code IDE Switcher
 
-[![CI](https://github.com/pingqLIN/vscode-antigravity-linker/actions/workflows/ci.yml/badge.svg)](https://github.com/pingqLIN/vscode-antigravity-linker/actions/workflows/ci.yml)
+[![CI](https://github.com/pingqLIN/vscode-ide-switcher/actions/workflows/ci.yml/badge.svg)](https://github.com/pingqLIN/vscode-ide-switcher/actions/workflows/ci.yml)
 
 Chrome 擴充功能，攔截 VS Code 連結（`vscode://`），讓你選擇要用哪個 IDE 開啟。
 
@@ -30,7 +30,7 @@ Chrome 擴充功能，攔截 VS Code 連結（`vscode://`），讓你選擇要�
 ## 檔案結構
 
 ```
-vscode-antigravity-linker/
+vscode-ide-switcher/
 ├── manifest.json    # 擴充功能配置
 ├── content.js       # 連結攔截腳本
 ├── popup.html       # Popup 介面

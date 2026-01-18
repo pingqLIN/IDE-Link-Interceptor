@@ -16,11 +16,11 @@
 
 ### VSCode Antigravity Linker Extension
 
-建立新專案目錄於 `c:\Users\addra\.gemini\antigravity\playground\crystal-astro\vscode-antigravity-linker`
+建立新專案目錄（例如：`vscode-ide-switcher`）
 
 ---
 
-#### [NEW] [manifest.json](file:///c:/Users/addra/.gemini/antigravity/playground/crystal-astro/vscode-antigravity-linker/manifest.json)
+#### [NEW] [manifest.json](manifest.json)
 
 Chrome 擴充功能配置檔：
 
@@ -30,7 +30,7 @@ Chrome 擴充功能配置檔：
 
 ---
 
-#### [NEW] [content.js](file:///c:/Users/addra/.gemini/antigravity/playground/crystal-astro/vscode-antigravity-linker/content.js)
+#### [NEW] [content.js](content.js)
 
 Content Script 負責：
 
@@ -56,7 +56,7 @@ document.addEventListener("click", (e) => {
 
 ---
 
-#### [NEW] [icons/](file:///c:/Users/addra/.gemini/antigravity/playground/crystal-astro/vscode-antigravity-linker/icons/)
+#### [NEW] [icons/](icons/)
 
 擴充功能圖示（16x16, 48x48, 128x128）
 
@@ -70,7 +70,7 @@ document.addEventListener("click", (e) => {
    - 開啟 Chrome → `chrome://extensions/`
    - 開啟「開發人員模式」
    - 點擊「載入未封裝項目」
-   - 選擇 `vscode-antigravity-linker` 資料夾
+   - 選擇專案資料夾
 
 2. **測試 VS Code 連結攔截**
    - 前往 [VS Code Marketplace](https://marketplace.visualstudio.com/)
@@ -123,7 +123,7 @@ document.addEventListener("click", (e) => {
 
 ---
 
-#### [MODIFY] [manifest.json](file:///c:/Users/addra/.gemini/antigravity/playground/crystal-astro/vscode-antigravity-linker/manifest.json)
+#### [MODIFY] [manifest.json](manifest.json)
 
 新增：
 
@@ -132,7 +132,7 @@ document.addEventListener("click", (e) => {
 
 ---
 
-#### [NEW] [popup.html](file:///c:/Users/addra/.gemini/antigravity/playground/crystal-astro/vscode-antigravity-linker/popup.html)
+#### [NEW] [popup.html](popup.html)
 
 Popup 介面結構：
 
@@ -142,7 +142,7 @@ Popup 介面結構：
 
 ---
 
-#### [NEW] [popup.css](file:///c:/Users/addra/.gemini/antigravity/playground/crystal-astro/vscode-antigravity-linker/popup.css)
+#### [NEW] [popup.css](popup.css)
 
 樣式設計：
 
@@ -152,13 +152,13 @@ Popup 介面結構：
 
 ---
 
-#### [NEW] [popup.js](file:///c:/Users/addra/.gemini/antigravity/playground/crystal-astro/vscode-antigravity-linker/popup.js)
+#### [NEW] [popup.js](popup.js)
 
 傳遞用戶選擇至 `chrome.storage.sync`，讓 Content Script 讀取。
 
 ---
 
-#### [MODIFY] [content.js](file:///c:/Users/addra/.gemini/antigravity/playground/crystal-astro/vscode-antigravity-linker/content.js)
+#### [MODIFY] [content.js](content.js)
 
 修改：
 

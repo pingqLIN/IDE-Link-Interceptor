@@ -25,7 +25,7 @@
 ## 檔案結構
 
 ```
-vscode-antigravity-linker/
+vscode-ide-switcher/
 ├── manifest.json    # 擴充功能配置
 ├── content.js       # 連結攔截腳本
 ├── popup.html       # Popup 介面
@@ -44,10 +44,7 @@ vscode-antigravity-linker/
 1. Chrome 網址列輸入 `chrome://extensions/`
 2. 開啟右上角「**開發人員模式**」
 3. 點擊「**載入未封裝項目**」
-4. 選擇資料夾：
-   ```
-   c:\Users\addra\.gemini\antigravity\playground\crystal-astro\vscode-antigravity-linker
-   ```
+4. 選擇資料夾（例如專案的本地目錄）
 
 ---
 
