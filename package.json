@@ -1,0 +1,21 @@
+{
+  "name": "vscode-ide-switcher",
+  "version": "1.3.0",
+  "description": "Chrome extension to redirect VS Code links to different IDEs",
+  "scripts": {
+    "lint": "eslint *.js",
+    "lint:fix": "eslint *.js --fix",
+    "package": "node scripts/package.js",
+    "validate": "node scripts/validate-manifest.js"
+  },
+  "keywords": [
+    "chrome-extension",
+    "vscode",
+    "ide-switcher"
+  ],
+  "author": "pingqLIN",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.57.0"
+  }
+}
