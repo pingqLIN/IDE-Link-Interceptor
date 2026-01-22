@@ -113,9 +113,9 @@
     });
   }
 
-  // 攔截 window.location.assign
-  const originalAssign = window.location.assign;
-  window.location.assign = function (url) {
+  // 攔截 window.location.assign (透過 Location.prototype)
+  const originalAssign = Location.prototype.assign;
+  Location.prototype.assign = function (url) {
     if (needsInterception(url)) {
       const newUrl = processUrl(url);
       if (newUrl && newUrl !== url) {
@@ -127,9 +127,9 @@
     return originalAssign.call(this, url);
   };
 
-  // 攔截 window.location.replace
-  const originalReplace = window.location.replace;
-  window.location.replace = function (url) {
+  // 攔截 window.location.replace (透過 Location.prototype)
+  const originalReplace = Location.prototype.replace;
+  Location.prototype.replace = function (url) {
     if (needsInterception(url)) {
       const newUrl = processUrl(url);
       if (newUrl && newUrl !== url) {
