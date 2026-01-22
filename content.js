@@ -33,13 +33,28 @@
   // 當前選擇的目標協議
   let targetProtocol = DEFAULT_PROTOCOL;
 
+  // 舊協議 ID 到新協議 ID 的映射（用於遷移）
+  const PROTOCOL_MIGRATION_MAP = {
+    'antigravity': 'antigraavity'
+  };
+
   /**
-   * 從 storage 載入用戶設定
+   * 從 storage 載入用戶設定（含遷移邏輯）
    */
   async function loadSettings() {
     try {
       const result = await chrome.storage.sync.get(STORAGE_KEY);
-      targetProtocol = result[STORAGE_KEY] || DEFAULT_PROTOCOL;
+      let protocol = result[STORAGE_KEY] || DEFAULT_PROTOCOL;
+
+      // 自動遷移舊的協議 ID
+      if (PROTOCOL_MIGRATION_MAP[protocol]) {
+        const newProtocol = PROTOCOL_MIGRATION_MAP[protocol];
+        console.log(`[IDE Switcher] 遷移協議: ${protocol} -> ${newProtocol}`);
+        await chrome.storage.sync.set({ [STORAGE_KEY]: newProtocol });
+        protocol = newProtocol;
+      }
+
+      targetProtocol = protocol;
       console.log(`[IDE Switcher] 目標 IDE: ${targetProtocol}`);
     } catch (error) {
       console.error('[IDE Switcher] 載入設定失敗:', error);

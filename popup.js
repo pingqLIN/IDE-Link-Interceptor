@@ -4,11 +4,29 @@
  * 處理 IDE 選擇邏輯，將選擇儲存至 chrome.storage.sync
  */
 
-(function() {
+(function () {
   'use strict';
 
   const STORAGE_KEY = 'selectedProtocol';
-  const DEFAULT_PROTOCOL = 'antigravity';
+  const DEFAULT_PROTOCOL = 'antigraavity';
+
+  // 舊協議 ID 到新協議 ID 的映射（用於遷移）
+  const PROTOCOL_MIGRATION_MAP = {
+    'antigravity': 'antigraavity'
+  };
+
+  /**
+   * 遷移舊的協議 ID 到新格式
+   */
+  async function migrateProtocolIfNeeded(protocol) {
+    if (PROTOCOL_MIGRATION_MAP[protocol]) {
+      const newProtocol = PROTOCOL_MIGRATION_MAP[protocol];
+      console.log(`[IDE Switcher] 遷移協議: ${protocol} -> ${newProtocol}`);
+      await chrome.storage.sync.set({ [STORAGE_KEY]: newProtocol });
+      return newProtocol;
+    }
+    return protocol;
+  }
 
   /**
    * 取得目前選擇的協議
@@ -16,7 +34,10 @@
   async function getSelectedProtocol() {
     try {
       const result = await chrome.storage.sync.get(STORAGE_KEY);
-      return result[STORAGE_KEY] || DEFAULT_PROTOCOL;
+      let protocol = result[STORAGE_KEY] || DEFAULT_PROTOCOL;
+      // 自動遷移舊的協議 ID
+      protocol = await migrateProtocolIfNeeded(protocol);
+      return protocol;
     } catch (error) {
       console.error('讀取設定失敗:', error);
       return DEFAULT_PROTOCOL;
@@ -60,21 +81,21 @@
   async function handleOptionClick(event) {
     const option = event.currentTarget;
     const protocol = option.dataset.protocol;
-    
+
     if (!protocol) return;
 
     // 儲存選擇
     const success = await setSelectedProtocol(protocol);
-    
+
     if (success) {
       // 移除所有 just-selected 類別
       document.querySelectorAll('.ide-option').forEach(el => {
         el.classList.remove('just-selected');
       });
-      
+
       // 添加動畫效果
       option.classList.add('just-selected');
-      
+
       // 更新 UI
       updateUI(protocol);
     }

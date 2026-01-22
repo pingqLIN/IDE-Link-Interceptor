@@ -10,6 +10,31 @@ const IDE_OPTIONS = [
   { id: "windsurf", name: "Windsurf", desc: "Codeium IDE" },
 ];
 
+// 舊協議 ID 到新協議 ID 的映射（用於遷移）
+const PROTOCOL_MIGRATION_MAP = {
+  'antigravity': 'antigraavity'
+};
+
+/**
+ * 遷移舊的協議 ID 到新格式
+ */
+async function migrateProtocolIfNeeded() {
+  try {
+    const result = await chrome.storage.sync.get(STORAGE_KEY);
+    const currentProtocol = result[STORAGE_KEY];
+    if (currentProtocol && PROTOCOL_MIGRATION_MAP[currentProtocol]) {
+      const newProtocol = PROTOCOL_MIGRATION_MAP[currentProtocol];
+      console.log(`[IDE Switcher] 遷移協議: ${currentProtocol} -> ${newProtocol}`);
+      await chrome.storage.sync.set({ [STORAGE_KEY]: newProtocol });
+      return newProtocol;
+    }
+    return currentProtocol;
+  } catch (error) {
+    console.error('[IDE Switcher] 遷移失敗:', error);
+    return null;
+  }
+}
+
 /**
  * 取得目前選擇的 IDE 名稱
  */
@@ -162,8 +187,10 @@ async function handleMenuClick(info, tab) {
 }
 
 // 監聽擴充功能安裝/更新
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener(async () => {
   console.log("[IDE Switcher] Extension installed/updated");
+  // 先執行遷移（處理舊的 antigravity -> antigraavity）
+  await migrateProtocolIfNeeded();
   createContextMenus();
 });
 
