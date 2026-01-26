@@ -20,9 +20,16 @@
 {editor}://{provider}/{action}?url={URL_ENCODED_TARGET}&branch={branch}&path={subdir}&file={file}&line={line}&name={publisher.extension}&version={version}
 ```
 
+**MCP 擴充模板**
+
+```
+{editor}:mcp/install?{URL_ENCODED_JSON_CONFIG}
+{editor}:mcp/by-name/{namespace}/{name}
+```
+
 **欄位說明**
 
-- **editor**：編輯器協議名稱，例如 `vscode`、`vscode-insiders`、`antigraavity`、`cursor`、`windsurf`。
+- **editor**：編輯器協議名稱，例如 `vscode`、`vscode-insiders`、`antigravity`、`cursor`、`windsurf`。
 - **provider**：編輯器內處理遠端資源的模組或命名空間，例如 `github.remotehub`、`repo`、`git`、`extension`。
 - **action**：動作，例如 `open`、`install`、`clone`、`browse`。
 - **url**：目標資源的完整 URL，**必須 URL encode**。
@@ -41,7 +48,7 @@
 |---|---:|---|---|---|
 | VS Code stable | `vscode://` | 官方穩定版 | `vscode://github.remotehub/open?url=https%3A%2F%2Fgithub.com%2Fmcp%2Fupstash%2Fcontext7` | `vscode://extension/install?url=https%3A%2F%2Fopen-vsx.org%2Fapi%2Fpub%2Fext%2F1.2.3%2Ffile&name=pub.ext&version=1.2.3` |
 | VS Code Insiders | `vscode-insiders://` | 預覽版 | `vscode-insiders://github.remotehub/open?url=...` | `vscode-insiders://extension/install?url=...` |
-| Antigravity IDE | `antigraavity://` | Antigravity 自訂協議 | `antigraavity://git/open?url=https%3A%2F%2Fgithub.com%2Fmcp%2Fupstash%2Fcontext7` | `antigraavity://extension/install?url={VSIX_URL}&name={publisher.ext}` |
+| Antigravity IDE | `antigravity://` | Antigravity 自訂協議 | `antigravity://git/open?url=https%3A%2F%2Fgithub.com%2Fmcp%2Fupstash%2Fcontext7` | `antigravity://extension/install?url={VSIX_URL}&name={publisher.ext}` |
 | Cursor AI IDE | `cursor://` | AI first IDE | `cursor://repo/open?url=https%3A%2F%2Fgithub.com%2Fmcp%2Fupstash%2Fcontext7` | `cursor://extension/install?url={VSIX_URL}&name={publisher.ext}` |
 | Windsurf Codeium | `windsurf://` | Codeium IDE | `windsurf://repo/open?url=https%3A%2F%2Fgithub.com%2Fmcp%2Fupstash%2Fcontext7` | `windsurf://extension/install?url={VSIX_URL}&name={publisher.ext}` |
 
@@ -64,7 +71,7 @@
    - 例如要在 Antigravity 打開 repo：
 
      ```
-     antigraavity://git/open?url=https%3A%2F%2Fgithub.com%2Fmcp%2Fupstash%2Fcontext7
+     antigravity://git/open?url=https%3A%2F%2Fgithub.com%2Fmcp%2Fupstash%2Fcontext7
      ```
 
 4. **加入可選參數**
@@ -89,7 +96,7 @@
   - Antigravity 安裝範例（已編碼）
 
     ```
-    antigraavity://extension/install?url=https%3A%2F%2Fopen-vsx.org%2Fapi%2Fpub%2Fext%2F1.2.3%2Ffile&name=pub.ext&version=1.2.3
+    antigravity://extension/install?url=https%3A%2F%2Fopen-vsx.org%2Fapi%2Fpub%2Fext%2F1.2.3%2Ffile&name=pub.ext&version=1.2.3
     ```
 
 - **若編輯器不支援協議**
@@ -132,7 +139,7 @@
 - **打開 GitHub repo 在 Antigravity**
 
   ```
-  antigraavity://git/open?url=https%3A%2F%2Fgithub.com%2Fmcp%2Fupstash%2Fcontext7
+  antigravity://git/open?url=https%3A%2F%2Fgithub.com%2Fmcp%2Fupstash%2Fcontext7
   ```
 
 - **在 Cursor 打開 repo 並指定分支與子目錄**
@@ -144,5 +151,5 @@
 - **在 Antigravity 安裝來自 Open VSX 的 VSIX**
 
   ```
-  antigraavity://extension/install?url=https%3A%2F%2Fopen-vsx.org%2Fapi%2Fpub%2Fext%2F1.2.3%2Ffile&name=pub.ext&version=1.2.3
+  antigravity://extension/install?url=https%3A%2F%2Fopen-vsx.org%2Fapi%2Fpub%2Fext%2F1.2.3%2Ffile&name=pub.ext&version=1.2.3
   ```

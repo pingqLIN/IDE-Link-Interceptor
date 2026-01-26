@@ -2,6 +2,7 @@
 
 > 最後更新：2026-01-24
 > 研究範圍：VS Code、Cursor、Windsurf、Antigravity 及相關擴充套件來源
+> 更新註記：本次更新參考了社群討論的構想（來源：https://community.firebasestudio.dev/t/fetching-vs-code-extensions-from-marketplace-visualstudio-com/7673/6），補強 Marketplace 下載連結與解析策略
 
 ---
 
@@ -30,7 +31,7 @@
 
 ### 重大發現
 
-1. **Antigravity 協議拼寫**：研究確認官方協議為 `antigravity://`（單個 a），而非 `antigraavity://`（雙 a）
+1. **Antigravity 協議拼寫**：研究確認官方協議為 `antigravity://`（單個 a），先前文件曾誤植為雙 a
 2. **MCP 安裝連結**：GitHub MCP Registry 和各 IDE 有專門的 MCP 安裝 URL 格式
 3. **vscode.dev 重定向**：支援多種格式包括 extension、mcp/install、remote-containers
 
@@ -119,7 +120,7 @@ https://windsurf.com/windsurf/download_linux (Linux)
 
 ### Antigravity
 
-> ⚠️ **重要**：官方協議為 `antigravity://`（單 a），非 `antigraavity://`（雙 a）
+> ⚠️ **重要**：官方協議為 `antigravity://`（單 a），先前文件曾誤植為雙 a
 
 #### 協議格式
 ```
@@ -165,6 +166,7 @@ vscode:extension/{publisher}.{extension}
 #### VSIX 下載 API
 ```
 https://marketplace.visualstudio.com/_apis/public/gallery/publishers/{publisher}/vsextensions/{extension}/{version}/vspackage
+https://{publisher}.gallery.vsassets.io/_apis/public/gallery/publisher/{publisher}/extension/{extension}/{version}/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage
 ```
 
 #### 解析方式
@@ -174,6 +176,7 @@ const url = new URL('https://marketplace.visualstudio.com/items?itemName=ms-pyth
 const itemName = url.searchParams.get('itemName'); // 'ms-python.python'
 const [publisher, extension] = itemName.split('.'); // ['ms-python', 'python']
 ```
+> 補充：新版 Marketplace 下載連結常使用 `{publisher}.gallery.vsassets.io` 網域，且路徑不含 `.vsix` 副檔名。
 
 ---
 
@@ -311,7 +314,6 @@ https://insiders.vscode.dev/redirect?url=vscode-insiders:mcp/install?{double_enc
 const VSCODE_PROTOCOLS = [
   'vscode:',
   'vscode-insiders:',
-  'antigraavity:',  // ⚠️ 拼寫錯誤
   'antigravity:',
   'cursor:',
   'windsurf:',
@@ -335,7 +337,9 @@ targetUrlPatterns: [
   '*://*/*.vsix',
   '*://*/*.vsix?*',
   '*://open-vsx.org/api/*/*/*/file*',
-  '*://*.open-vsx.org/api/*/*/*/file*'
+  '*://*.open-vsx.org/api/*/*/*/file*',
+  '*://*.gallery.vsassets.io/_apis/public/gallery/publisher/*/extension/*/*/assetbyname/*',
+  '*://marketplace.visualstudio.com/_apis/public/gallery/publishers/*/vsextensions/*/*/vspackage'
 ]
 ```
 
@@ -346,16 +350,14 @@ targetUrlPatterns: [
 ### 風險 1：Antigravity 協議拼寫不一致
 
 **問題**：
-- 程式碼中使用 `antigraavity://`（雙 a）
-- 但研究顯示官方協議為 `antigravity://`（單 a）
-- 目前同時支援兩種，但 `antigraavity` 可能永遠不會被使用
+- 先前文件/程式碼曾有雙 a 的誤植
+- 現已統一為 `antigravity://`（單 a）
 
-**影響**：低 - 已同時支援兩種拼寫
+**影響**：低 - 已修正一致
 
 **建議**：
-- 保持現狀（向後相容）
-- 將 `antigravity://` 設為首選/預設
-- 在文件中說明歷史原因
+- 維持文件與程式碼一致
+- 若需向後相容，可在轉換邏輯加入舊拼寫偵測
 
 ---
 

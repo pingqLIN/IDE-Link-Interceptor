@@ -14,7 +14,7 @@
 
 | IDE 名稱 | 協議 (Protocol) | Windows 預設路徑範例 (EXE_PATH) |
 | :--- | :--- | :--- |
-| **Antigravity** | `antigraavity` | `C:\\Program Files\\Antigravity\\Antigravity.exe` |
+| **Antigravity** | `antigravity` | `C:\\Program Files\\Antigravity\\Antigravity.exe` |
 | **VSCodium** | `vscodium` | `C:\\Program Files\\VSCodium\\VSCodium.exe` |
 | **Cursor** | `cursor` | `C:\\Users\\User\\AppData\\Local\\Programs\\Cursor\\Cursor.exe` |
 | **Windsurf** | `windsurf` | `C:\\Program Files\\Windsurf\\Windsurf.exe` |
@@ -28,7 +28,7 @@
 
 ### 1. 通用註冊腳本 (`register-ide.reg`)
 
-請將下方的 `[PROTOCOL]` 替換為協議名稱（如 `antigraavity`），並將 `[PATH_TO_EXE]` 替換為執行檔路徑（注意反斜線要兩次 `\\`）。
+請將下方的 `[PROTOCOL]` 替換為協議名稱（如 `antigravity`），並將 `[PATH_TO_EXE]` 替換為執行檔路徑（注意反斜線要兩次 `\\`）。
 
 ```registry
 Windows Registry Editor Version 5.00
@@ -76,8 +76,8 @@ macOS 應用程式通常會自動註冊。若失效，請檢查 App 套件內的
         <string>IDE Protocol</string>
         <key>CFBundleURLSchemes</key>
         <array>
-            <!-- 在此填入協議名稱，如 antigraavity, cursor, windsurf -->
-            <string>antigraavity</string>
+            <!-- 在此填入協議名稱，如 antigravity, cursor, windsurf -->
+            <string>antigravity</string>
         </array>
     </dict>
 </array>

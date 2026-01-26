@@ -34,8 +34,11 @@ A browser extension that intercepts IDE hyperlinks (`vscode://`, `cursor://`, `w
 - 🔗 **Intercept IDE Protocol Links** - Captures `vscode://`, `cursor://`, `windsurf://` and other IDE protocol links from web pages
 - 🎯 **Choose Your IDE** - Select your preferred IDE from a convenient popup or context menu
 - 🚀 **No Browser Prompts** - Eliminates the "Open Visual Studio Code?" dialog
-- 📦 **VSIX Support** - Right-click on `.vsix` files to install directly in your chosen IDE
+- 📦 **Extension & VSIX Support** - Opens extension pages in your chosen IDE; right-click `.vsix` files for direct installation
+- 🔧 **MCP Server Installation** - Intercepts MCP install links (including Cursor's special deeplink format) and redirects to your IDE
 - 💾 **Remember Your Choice** - Your IDE selection is saved and persists across browsing sessions
+
+> **Note:** When clicking "Install" on VS Code Marketplace extensions, the extension page will open in your chosen IDE. Due to security limitations in all VS Code-based IDEs, you'll need to click "Install" once more inside the IDE to complete the installation.
 
 ## 📸 Screenshots
 
@@ -58,7 +61,7 @@ A browser extension that intercepts IDE hyperlinks (`vscode://`, `cursor://`, `w
 | :--- | :--- | :--- |
 | **VS Code** | `vscode://` | Official stable release |
 | **VS Code Insiders** | `vscode-insiders://` | Preview release |
-| **Antigravity** | `antigraavity://` | Antigravity IDE |
+| **Antigravity** | `antigravity://` | Antigravity IDE |
 | **Cursor** | `cursor://` | AI-first IDE |
 | **Windsurf** | `windsurf://` | Codeium IDE |
 
@@ -106,6 +109,17 @@ npm run validate
 1. Right-click on a `.vsix` download link.
 2. Click "**📦 Install extension with \[IDE Name\]**".
 3. The extension will be installed in your chosen IDE.
+
+### Method 4: Extension Install Links
+
+When you click "Install" on VS Code Marketplace or similar sites:
+
+1. The extension intercepts the `vscode:extension/...` link.
+2. It converts the protocol to your target IDE (e.g., `antigravity:extension/...`).
+3. Your IDE opens and displays the extension's page.
+4. Click "Install" inside the IDE to complete installation.
+
+> **Why the extra click?** All VS Code-based IDEs intentionally do not support automatic extension installation via protocol URLs for security reasons. This is a platform limitation, not a bug.
 
 ## 🧪 Testing
 

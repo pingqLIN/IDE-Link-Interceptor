@@ -37,7 +37,7 @@ Content Script 負責：
 1. 監聽頁面中的連結點擊事件
 2. 檢測 `vscode://` 或 `vscode-insiders://` 協議
 3. 阻止預設行為
-4. 將協議替換為 `antigraavity://`
+4. 將協議替換為 `antigravity://`
 5. 觸發新連結導航
 
 ```javascript
@@ -48,7 +48,7 @@ document.addEventListener("click", (e) => {
   );
   if (link) {
     e.preventDefault();
-    const newUrl = link.href.replace(/^vscode(-insiders)?:/, "antigraavity:");
+    const newUrl = link.href.replace(/^vscode(-insiders)?:/, "antigravity:");
     window.location.href = newUrl;
   }
 });
@@ -90,13 +90,13 @@ document.addEventListener("click", (e) => {
 ## 注意事項
 
 > [!IMPORTANT]
-> 此擴充功能的成功運作取決於 Antigravity 是否已註冊 `antigraavity://` 協議處理器。如果 Antigravity 尚未註冊此協議，需要先確認 Antigravity 支援的協議格式。
+> 此擴充功能的成功運作取決於 Antigravity 是否已註冊 `antigravity://` 協議處理器。如果 Antigravity 尚未註冊此協議，需要先確認 Antigravity 支援的協議格式。
 
 ---
 
 ## 開放問題
 
-1. ~~**Antigravity 協議格式**~~：已確認使用 `antigraavity://` 協議
+1. ~~**Antigravity 協議格式**~~：已確認使用 `antigravity://` 協議
 2. ~~**VS Code 連結路徑對應**~~：已實作協議轉換邏輯
 
 ---
@@ -111,7 +111,7 @@ document.addEventListener("click", (e) => {
 | ---------------- | -------------------- | --------------- |
 | VS Code          | `vscode://`          | 官方穩定版      |
 | VS Code Insiders | `vscode-insiders://` | 開發預覽版      |
-| Antigravity      | `antigraavity://`    | Antigravity IDE |
+| Antigravity      | `antigravity://`    | Antigravity IDE |
 | Cursor           | `cursor://`          | AI-first IDE    |
 | Windsurf         | `windsurf://`        | Codeium IDE     |
 

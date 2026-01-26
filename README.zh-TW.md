@@ -30,9 +30,12 @@
 - 🔗 **攔截 IDE 協議連結** - 自動捕捉網頁上的 `vscode://`、`cursor://`、`windsurf://` 等連結
 - 🎯 **選擇你的 IDE** - 透過 Popup 視窗或右鍵選單，輕鬆選擇要開啟的編輯器
 - 🚀 **消除瀏覽器提示** - 不再顯示惱人的「開啟 Visual Studio Code？」確認視窗
-- 📦 **VSIX 直接安裝** - 右鍵點擊 `.vsix` 檔案，直接安裝到你指定的 IDE
+- 📦 **擴充套件與 VSIX 支援** - 在你選擇的 IDE 中開啟擴充頁面；右鍵點擊 `.vsix` 檔案直接安裝
+- 🔧 **MCP Server 安裝支援** - 攔截 MCP 安裝連結（包含 Cursor 特殊的 deeplink 格式）並重新導向至你的 IDE
 - 💾 **自動記憶選擇** - 系統會自動記住你上次使用的 IDE，無需重複選擇
 - 🌐 **多語言支援** - 介面自動切換繁體中文或英文（依據瀏覽器設定）
+
+> **注意：** 當你在 VS Code Marketplace 點擊「Install」安裝擴充套件時，擴充頁面會在你選擇的 IDE 中開啟。由於所有 VS Code 系列 IDE 的安全性限制，你需要在 IDE 內再點擊一次「安裝」按鈕才能完成安裝。
 
 ## 📸 截圖預覽
 
@@ -55,7 +58,7 @@
 | :--- | :--- | :--- |
 | **VS Code** | `vscode://` | 官方穩定版 |
 | **VS Code Insiders** | `vscode-insiders://` | 預覽測試版 |
-| **Antigravity** | `antigraavity://` | Antigravity 專用 IDE |
+| **Antigravity** | `antigravity://` | Antigravity 專用 IDE |
 | **Cursor** | `cursor://` | AI 優先的新世代 IDE |
 | **Windsurf** | `windsurf://` | 搭載 Codeium 的 IDE |
 
@@ -103,6 +106,17 @@ npm run validate
 1. 在 `.vsix` 下載連結上按右鍵。
 2. 點擊「**📦 用 \[IDE 名稱\] 安裝此擴充套件**」。
 3. 該套件將會自動在你選擇的 IDE 中開啟安裝。
+
+### 方法四：從 Marketplace 安裝擴充套件
+
+當你在 VS Code Marketplace 或類似網站點擊「Install」時：
+
+1. 本擴充功能會攔截 `vscode:extension/...` 連結。
+2. 自動轉換協議至你的目標 IDE（例如 `antigravity:extension/...`）。
+3. 你的 IDE 會開啟並顯示該擴充套件的頁面。
+4. 在 IDE 內點擊「安裝」即可完成安裝。
+
+> **為什麼需要多點一次？** 所有 VS Code 系列 IDE 基於安全考量，都不支援透過 protocol URL 自動安裝擴充套件。這是平台限制，並非本擴充功能的問題。
 
 ## 🧪 測試連結
 

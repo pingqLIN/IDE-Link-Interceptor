@@ -53,7 +53,7 @@
     ```
 
 2. **增加 Open VSX 注入按鈕**：
-    在點擊相關網站時，自動在「Download」按鈕旁注入一個「Install in [您的 IDE]」的按鈕，其背後邏輯是構造一個 `antigraavity:extension/...` 的連結。
+    在點擊相關網站時，自動在「Download」按鈕旁注入一個「Install in [您的 IDE]」的按鈕，其背後邏輯是構造一個 `antigravity:extension/...` 的連結。
 
 3. **VSIX 下載攔截**：
     監聽後綴名為 `.vsix` 的點擊事件，嘗試轉換為 IDE 安裝命令（如果目標 IDE 支持對應的安裝協議）。
