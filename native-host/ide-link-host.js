@@ -11,6 +11,12 @@
  */
 
 const { spawn } = require('child_process');
+const {
+  checkProtocolRegistration,
+  registerProtocol,
+  autoRegisterProtocol,
+  findIDEPath
+} = require('./protocol-helper');
 
 // IDE 命令對應
 const IDE_COMMANDS = {
@@ -29,7 +35,7 @@ function sendMessage(message) {
   const buffer = Buffer.from(json, 'utf8');
   const header = Buffer.alloc(4);
   header.writeUInt32LE(buffer.length, 0);
-  
+
   process.stdout.write(header);
   process.stdout.write(buffer);
 }
@@ -40,14 +46,14 @@ function sendMessage(message) {
 function installExtension(ide, extensionId) {
   return new Promise((resolve, reject) => {
     const command = IDE_COMMANDS[ide];
-    
+
     if (!command) {
       reject(new Error(`Unknown IDE: ${ide}`));
       return;
     }
 
     const args = ['--install-extension', extensionId];
-    
+
     const child = spawn(command, args, {
       shell: true,
       windowsHide: true,
@@ -109,11 +115,65 @@ async function handleMessage(message) {
 
     try {
       const result = await installExtension(ide, extensionId);
-      return { 
-        success: true, 
+      return {
+        success: true,
         message: `Extension ${extensionId} installed successfully`,
         output: result.stdout
       };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  }
+
+  // 檢查協議是否已註冊
+  if (action === 'checkProtocol') {
+    const protocol = message.protocol || ide;
+    if (!protocol) {
+      return { success: false, error: 'Missing protocol' };
+    }
+
+    try {
+      const result = await checkProtocolRegistration(protocol);
+      return { success: true, ...result };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  }
+
+  // 註冊協議
+  if (action === 'registerProtocol') {
+    const protocol = message.protocol || ide;
+    const execPath = message.execPath;
+
+    if (!protocol) {
+      return { success: false, error: 'Missing protocol' };
+    }
+
+    try {
+      // 如果有指定 execPath，直接註冊
+      // 否則自動偵測並註冊
+      if (execPath) {
+        const result = await registerProtocol(protocol, execPath);
+        return { success: result.success, error: result.error, execPath };
+      } else {
+        const result = await autoRegisterProtocol(protocol);
+        return result;
+      }
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  }
+
+  // 尋找 IDE 安裝路徑
+  if (action === 'findIDEPath') {
+    const protocol = message.protocol || ide;
+    if (!protocol) {
+      return { success: false, error: 'Missing protocol' };
+    }
+
+    try {
+      const path = await findIDEPath(protocol);
+      return { success: true, path: path, found: !!path };
     } catch (err) {
       return { success: false, error: err.message };
     }
@@ -158,7 +218,7 @@ function main() {
 
       try {
         const message = JSON.parse(messageData.toString('utf8'));
-        
+
         handleMessage(message)
           .then(response => {
             sendMessage(response);
@@ -172,7 +232,7 @@ function main() {
         sendMessage({ success: false, error: `Parse error: ${err.message}` });
         process.exit(1);
       }
-      
+
       return; // 只處理一個訊息
     }
   });

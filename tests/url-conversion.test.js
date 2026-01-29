@@ -87,6 +87,39 @@ function buildExtensionUrl(protocol, publisher, name) {
     return `${protocol}:extension/${extensionId}`;
 }
 
+/**
+ * 檢查 URL 是否為 MCP URL
+ */
+function isMcpUrl(url) {
+    if (!url || typeof url !== 'string') return false;
+    return /^(vscode|vscode-insiders):mcp\//.test(url);
+}
+
+/**
+ * 從 MCP URL 提取服務器名稱
+ */
+function extractMcpServerName(url) {
+    if (!isMcpUrl(url)) return null;
+    
+    try {
+        // Format 1: vscode:mcp/by-name/{name}
+        const byNameMatch = url.match(/^(vscode|vscode-insiders):mcp\/by-name\/([^/?#]+)/);
+        if (byNameMatch) {
+            return byNameMatch[2];
+        }
+        
+        // Format 2: vscode:mcp/api.mcp.github.com/.../servers/{id}/{name}
+        const apiMatch = url.match(/^(vscode|vscode-insiders):mcp\/api\.mcp\.github\.com.*\/servers\/[^/]+\/([^/?#]+)/);
+        if (apiMatch) {
+            return apiMatch[2];
+        }
+        
+        return null;
+    } catch {
+        return null;
+    }
+}
+
 // ========== 測試案例 ==========
 
 function runTests() {
@@ -251,13 +284,88 @@ function runTests() {
         'vscode:extension/esbenp.prettier-vscode'
     );
 
-    test(
-        '6.3 Cursor 擴充 URL 保持 protocol:extension/id 格式',
-        buildExtensionUrl('cursor', 'ms-python', 'python'),
-        'cursor:extension/ms-python.python'
-    );
+     test(
+         '6.3 Cursor 擴充 URL 保持 protocol:extension/id 格式',
+         buildExtensionUrl('cursor', 'ms-python', 'python'),
+         'cursor:extension/ms-python.python'
+     );
 
-    // ========== 測試結果統計 ==========
+     // ========== 測試 7: MCP URL 檢測與處理 ==========
+     console.log('\n📋 測試 7: MCP URL 檢測與處理');
+
+     test(
+         '7.1 檢測 vscode:mcp/by-name/huggingface 格式',
+         isMcpUrl('vscode:mcp/by-name/huggingface'),
+         true
+     );
+
+     test(
+         '7.2 檢測 vscode:mcp/api.mcp.github.com/.../servers/... 格式',
+         isMcpUrl('vscode:mcp/api.mcp.github.com/2025-09-15/v0/servers/huggingface/hf-mcp-server'),
+         true
+     );
+
+     test(
+         '7.3 檢測 vscode-insiders:mcp 格式',
+         isMcpUrl('vscode-insiders:mcp/by-name/huggingface'),
+         true
+     );
+
+     test(
+         '7.4 非 MCP URL 應返回 false',
+         isMcpUrl('vscode://github.remotehub/open?url=https%3A%2F%2Fgithub.com%2Fuser%2Frepo'),
+         false
+     );
+
+     test(
+         '7.5 提取 by-name 格式的服務器名稱',
+         extractMcpServerName('vscode:mcp/by-name/huggingface'),
+         'huggingface'
+     );
+
+     test(
+         '7.6 提取 by-name 格式帶路徑的服務器名稱',
+         extractMcpServerName('vscode:mcp/by-name/python-mcp?arg=value'),
+         'python-mcp'
+     );
+
+     test(
+         '7.7 提取 api.mcp.github.com 格式的服務器名稱',
+         extractMcpServerName('vscode:mcp/api.mcp.github.com/2025-09-15/v0/servers/huggingface/hf-mcp-server'),
+         'hf-mcp-server'
+     );
+
+     test(
+         '7.8 提取 api.mcp.github.com 格式帶查詢參數的服務器名稱',
+         extractMcpServerName('vscode:mcp/api.mcp.github.com/2025-09-15/v0/servers/huggingface/hf-mcp-server?version=1.0'),
+         'hf-mcp-server'
+     );
+
+     test(
+         '7.9 vscode-insiders 前綴的 by-name 格式提取',
+         extractMcpServerName('vscode-insiders:mcp/by-name/anthropic'),
+         'anthropic'
+     );
+
+     test(
+         '7.10 vscode-insiders 前綴的 api.mcp.github.com 格式提取',
+         extractMcpServerName('vscode-insiders:mcp/api.mcp.github.com/2025-09-15/v0/servers/anthropic/claude-mcp'),
+         'claude-mcp'
+     );
+
+     test(
+         '7.11 非 MCP URL 應返回 null',
+         extractMcpServerName('vscode://github.remotehub/open?url=https%3A%2F%2Fgithub.com'),
+         null
+     );
+
+     test(
+         '7.12 null 或 undefined URL 應返回 null',
+         extractMcpServerName(null),
+         null
+     );
+
+     // ========== 測試結果統計 ==========
     console.log('\n' + '='.repeat(60));
     console.log('📊 測試結果統計');
     console.log('='.repeat(60));

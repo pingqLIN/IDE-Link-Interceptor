@@ -108,6 +108,97 @@ async function installViaHost(extensionId, ide) {
 }
 
 /**
+ * 檢查指定 IDE 協議是否已在系統中註冊
+ * @param {string} protocol - IDE 協議名稱
+ * @returns {Promise<{registered: boolean, execPath?: string, error?: string}>}
+ */
+async function checkIDERegistration(protocol) {
+  return new Promise((resolve) => {
+    chrome.runtime.sendNativeMessage(
+      NATIVE_HOST_NAME,
+      { action: 'checkProtocol', protocol },
+      (response) => {
+        if (chrome.runtime.lastError) {
+          console.log('[IDE Switcher] checkIDERegistration error:', chrome.runtime.lastError.message);
+          resolve({ registered: false, error: chrome.runtime.lastError.message });
+        } else if (response && response.success) {
+          resolve({
+            registered: response.registered,
+            execPath: response.execPath
+          });
+        } else {
+          resolve({ registered: false, error: response?.error });
+        }
+      }
+    );
+  });
+}
+
+/**
+ * 請求 Native Host 自動註冊 IDE 協議
+ * @param {string} protocol - IDE 協議名稱
+ * @param {string} [execPath] - 可選，指定 IDE 執行檔路徑
+ * @returns {Promise<{success: boolean, execPath?: string, error?: string}>}
+ */
+async function requestIDERegistration(protocol, execPath = null) {
+  return new Promise((resolve) => {
+    const message = { action: 'registerProtocol', protocol };
+    if (execPath) {
+      message.execPath = execPath;
+    }
+
+    chrome.runtime.sendNativeMessage(
+      NATIVE_HOST_NAME,
+      message,
+      (response) => {
+        if (chrome.runtime.lastError) {
+          console.error('[IDE Switcher] requestIDERegistration error:', chrome.runtime.lastError.message);
+          resolve({ success: false, error: chrome.runtime.lastError.message });
+        } else if (response && response.success) {
+          resolve({
+            success: true,
+            execPath: response.execPath,
+            alreadyRegistered: response.alreadyRegistered
+          });
+        } else {
+          resolve({ success: false, error: response?.error });
+        }
+      }
+    );
+  });
+}
+
+/**
+ * 批量檢查所有 IDE 的註冊狀態
+ * @returns {Promise<Object<string, {registered: boolean, execPath?: string}>>}
+ */
+async function checkAllIDERegistrations() {
+  const results = {};
+
+  // 先確認 Native Host 可用
+  if (nativeHostAvailable === null) {
+    await checkNativeHost();
+  }
+
+  if (!nativeHostAvailable) {
+    // Native Host 不可用，返回所有未知狀態
+    IDE_OPTIONS.forEach(ide => {
+      results[ide.id] = { registered: null, error: 'Native Host not available' };
+    });
+    return results;
+  }
+
+  // 並行檢查所有 IDE
+  const promises = IDE_OPTIONS.map(async (ide) => {
+    const status = await checkIDERegistration(ide.id);
+    results[ide.id] = status;
+  });
+
+  await Promise.all(promises);
+  return results;
+}
+
+/**
  * 建立右鍵選單
  */
 async function createContextMenus() {
@@ -272,11 +363,11 @@ function buildExtensionViewUrl(protocol, extInfo) {
     return null;
   }
   const extensionId = `${extInfo.publisher}.${extInfo.name}`;
-  
+
   if (protocol === 'antigravity') {
     return `antigravity://${extensionId}`;
   }
-  
+
   const prefix = getProtocolPrefix(protocol);
   return `${prefix}extension/${extensionId}`;
 }
@@ -307,7 +398,7 @@ async function handleMenuClick(info, tab) {
     const ideName = IDE_OPTIONS.find(i => i.id === protocol)?.name || protocol;
 
     const extInfo = parseExtensionFromVsixUrl(info.linkUrl);
-    
+
     if (!extInfo) {
       // 無法解析擴充資訊，直接下載 VSIX 並顯示提示
       console.log(`[IDE Switcher] Cannot parse extension info, downloading VSIX: ${info.linkUrl}`);
@@ -316,19 +407,19 @@ async function handleMenuClick(info, tab) {
     }
 
     const extensionId = `${extInfo.publisher}.${extInfo.name}`;
-    
+
     // 嘗試透過 Native Host 安裝
     if (nativeHostAvailable === null) {
       await checkNativeHost();
     }
-    
+
     if (nativeHostAvailable) {
       console.log(`[IDE Switcher] Installing ${extensionId} via Native Host...`);
       showNotification(
         chrome.i18n.getMessage('notificationInstalling') || 'Installing Extension',
         `${extensionId} → ${ideName}`
       );
-      
+
       try {
         const installResult = await installViaHost(extensionId, protocol);
         console.log('[IDE Switcher] Install result:', installResult);
@@ -349,7 +440,7 @@ async function handleMenuClick(info, tab) {
     } else {
       // Native Host 不可用，使用 protocol URL 或下載備援
       console.log('[IDE Switcher] Native Host not available, using fallback...');
-      
+
       // 嘗試使用 protocol URL (對於支援的 IDE)
       const viewUrl = buildExtensionViewUrl(protocol, extInfo);
       if (viewUrl) {
@@ -389,11 +480,11 @@ function downloadVsixWithNotification(url, ideName) {
       console.error('[IDE Switcher] Download failed:', chrome.runtime.lastError);
       return;
     }
-    
+
     showNotification(
       chrome.i18n.getMessage('notificationVsixDownloaded') || 'VSIX Downloaded',
-      chrome.i18n.getMessage('notificationVsixInstallHint', [ideName]) || 
-        `Use "${ideName} --install-extension <path>" to install.`
+      chrome.i18n.getMessage('notificationVsixInstallHint', [ideName]) ||
+      `Use "${ideName} --install-extension <path>" to install.`
     );
   });
 }
@@ -405,19 +496,19 @@ async function handleInstallRequest(extensionId) {
   const result = await chrome.storage.sync.get(STORAGE_KEY);
   const protocol = result[STORAGE_KEY] || DEFAULT_PROTOCOL;
   const ideName = IDE_OPTIONS.find(i => i.id === protocol)?.name || protocol;
-  
+
   // 檢查 Native Host
   if (nativeHostAvailable === null) {
     await checkNativeHost();
   }
-  
+
   if (nativeHostAvailable) {
     console.log(`[IDE Switcher] Installing ${extensionId} via Native Host...`);
     showNotification(
       chrome.i18n.getMessage('notificationInstalling') || 'Installing Extension',
       `${extensionId} → ${ideName}`
     );
-    
+
     try {
       await installViaHost(extensionId, protocol);
       showNotification(
@@ -436,8 +527,8 @@ async function handleInstallRequest(extensionId) {
     }
   } else {
     // Native Host 不可用，返回提示
-    return { 
-      success: false, 
+    return {
+      success: false,
       error: 'Native Host not installed',
       hint: 'Please run the install script in native-host folder first.'
     };
@@ -452,11 +543,35 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       .catch(err => sendResponse({ success: false, error: err.message }));
     return true; // 保持 sendResponse 有效
   }
-  
+
   if (request.action === 'checkNativeHost') {
     checkNativeHost().then(available => {
       sendResponse({ available });
     });
+    return true;
+  }
+
+  // 檢查單一 IDE 協議註冊狀態
+  if (request.action === 'checkIDERegistration' && request.protocol) {
+    checkIDERegistration(request.protocol)
+      .then(sendResponse)
+      .catch(err => sendResponse({ registered: false, error: err.message }));
+    return true;
+  }
+
+  // 批量檢查所有 IDE 註冊狀態
+  if (request.action === 'checkAllIDERegistrations') {
+    checkAllIDERegistrations()
+      .then(sendResponse)
+      .catch(err => sendResponse({ error: err.message }));
+    return true;
+  }
+
+  // 請求註冊 IDE 協議
+  if (request.action === 'registerProtocol' && request.protocol) {
+    requestIDERegistration(request.protocol, request.execPath)
+      .then(sendResponse)
+      .catch(err => sendResponse({ success: false, error: err.message }));
     return true;
   }
 });

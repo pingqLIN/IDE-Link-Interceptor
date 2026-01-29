@@ -58,5 +58,29 @@
     "notificationInstalledTo": {
         "message": "已安裝至",
         "description": "Text between extension ID and IDE name in success notification"
+    },
+    "statusRegistered": {
+        "message": "已註冊",
+        "description": "Tooltip when IDE protocol is registered"
+    },
+    "statusNotRegistered": {
+        "message": "未註冊",
+        "description": "Tooltip when IDE protocol is not registered"
+    },
+    "statusChecking": {
+        "message": "檢測中...",
+        "description": "Tooltip when checking IDE protocol status"
+    },
+    "fixRegistration": {
+        "message": "修復註冊",
+        "description": "Button text to fix protocol registration"
+    },
+    "fixSuccess": {
+        "message": "協議註冊成功！",
+        "description": "Message when protocol registration succeeds"
+    },
+    "fixFailed": {
+        "message": "註冊失敗，請確認 IDE 已安裝。",
+        "description": "Message when protocol registration fails"
     }
 }

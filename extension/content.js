@@ -41,6 +41,12 @@
 
   const VSCODE_EXTENSION_SCHEMES = new Set(['vscode', 'vscode-insiders']);
 
+  // MCP 伺服器名稱到 GitHub 倉庫的映射
+  const MCP_REPO_MAP = {
+    'huggingface': 'https://github.com/huggingface/hf-mcp-server',
+    'hf-mcp-server': 'https://github.com/huggingface/hf-mcp-server'
+  };
+
   // 避免破壞 OAuth/登入流程（例如 GitHub Copilot / GitHub Auth 回呼）
   // 典型回呼：vscode://vscode.github-authentication/did-authenticate?code=...&state=...
   function isAuthCallbackUrl(url) {
@@ -122,8 +128,49 @@
   }
 
   /**
-   * 判斷是否為 VSIX 下載連結
-   */
+    * 檢查 URL 是否為 MCP URL
+    * 支援兩種格式：
+    * 1. vscode:mcp/by-name/{name}
+    * 2. vscode:mcp/api.mcp.github.com/.../servers/{id}/{name}
+    */
+  function isMcpUrl(url) {
+    if (!url || typeof url !== 'string') return false;
+    return /^(vscode|vscode-insiders):mcp\//.test(url);
+  }
+
+  /**
+    * 從 MCP URL 提取服務器名稱
+    * 支援兩種格式的提取：
+    * 1. vscode:mcp/by-name/huggingface → "huggingface"
+    * 2. vscode:mcp/api.mcp.github.com/.../servers/huggingface/hf-mcp-server → "hf-mcp-server"
+    * 
+    * @returns {string|null} 服務器名稱，如果格式不符則返回 null
+    */
+  function extractMcpServerName(url) {
+    if (!isMcpUrl(url)) return null;
+
+    try {
+      // 格式 1: vscode:mcp/by-name/{name}
+      const byNameMatch = url.match(/^(vscode|vscode-insiders):mcp\/by-name\/([^/?#]+)/);
+      if (byNameMatch) {
+        return byNameMatch[2];
+      }
+
+      // 格式 2: vscode:mcp/api.mcp.github.com/.../servers/{id}/{name}
+      const apiMatch = url.match(/^(vscode|vscode-insiders):mcp\/api\.mcp\.github\.com.*\/servers\/[^/]+\/([^/?#]+)/);
+      if (apiMatch) {
+        return apiMatch[2];
+      }
+
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+    * 判斷是否為 VSIX 下載連結
+    */
   function isVsixUrl(url) {
     try {
       const urlObj = new URL(url);
@@ -317,8 +364,311 @@
   }
 
   /**
-   * 處理連結點擊事件
-   */
+    * 建立並顯示 MCP 安裝說明模態框
+    */
+  function createMcpInstructionModal(serverName, repoUrl) {
+    const modalId = 'ide-switcher-mcp-modal';
+     
+    // 檢查模態框是否已存在
+    if (document.getElementById(modalId)) {
+      return document.getElementById(modalId);
+    }
+
+    // 建立模態框 HTML
+    const modalHTML = `
+       <div id="${modalId}" class="ide-switcher-mcp-modal-overlay">
+         <div class="ide-switcher-mcp-modal">
+           <div class="ide-switcher-mcp-modal-header">
+             <h2>MCP 伺服器安裝指南 for Antigravity</h2>
+             <button class="ide-switcher-mcp-modal-close" aria-label="關閉">
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                 <line x1="18" y1="6" x2="6" y2="18"></line>
+                 <line x1="6" y1="6" x2="18" y2="18"></line>
+               </svg>
+             </button>
+           </div>
+           <div class="ide-switcher-mcp-modal-content">
+             <p class="ide-switcher-mcp-modal-intro">
+               Antigravity 不支援 MCP URL 協議處理程式。您已被重定向到 GitHub 倉庫。
+             </p>
+
+             <h3>安裝方法 1: MCP Store (推薦)</h3>
+             <ol>
+               <li>開啟 Antigravity</li>
+               <li>點擊 "..." → "MCP Store"</li>
+               <li>搜尋 "<strong>${serverName}</strong>"</li>
+               <li>點擊「安裝」</li>
+             </ol>
+
+             <h3>安裝方法 2: 手動設定</h3>
+             <p>編輯 <code>~/.gemini/antigravity/mcp_config.json</code> 並新增伺服器設定。</p>
+             <p>詳細的設定說明請參閱 <a href="${repoUrl}" target="_blank" class="ide-switcher-mcp-modal-link">GitHub 倉庫</a>。</p>
+
+             <div class="ide-switcher-mcp-modal-footer">
+               <a href="${repoUrl}" target="_blank" class="ide-switcher-mcp-modal-button">
+                 檢視 GitHub 倉庫
+               </a>
+               <label class="ide-switcher-mcp-modal-checkbox">
+                 <input type="checkbox" id="ide-switcher-mcp-dont-show-again">
+                 <span>不要再顯示</span>
+               </label>
+             </div>
+           </div>
+         </div>
+       </div>
+     `;
+
+    // 建立容器並插入 DOM
+    const container = document.createElement('div');
+    container.innerHTML = modalHTML;
+    const modal = container.firstElementChild;
+     
+    // 注入 CSS 樣式
+    injectModalStyles();
+
+    // 新增事件監聽器
+    const closeBtn = modal.querySelector('.ide-switcher-mcp-modal-close');
+    const overlay = modal.querySelector('.ide-switcher-mcp-modal-overlay');
+    const dontShowCheckbox = modal.querySelector('#ide-switcher-mcp-dont-show-again');
+
+    closeBtn.addEventListener('click', () => {
+      modal.remove();
+      if (dontShowCheckbox.checked) {
+        chrome.storage.sync.set({ mcpInstructionModalDismissed: true });
+      }
+    });
+
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        modal.remove();
+        if (dontShowCheckbox.checked) {
+          chrome.storage.sync.set({ mcpInstructionModalDismissed: true });
+        }
+      }
+    });
+
+    return modal;
+  }
+
+  /**
+    * 注入模態框 CSS 樣式
+    */
+  function injectModalStyles() {
+    const styleId = 'ide-switcher-mcp-modal-styles';
+    if (document.getElementById(styleId)) {
+      return; // 樣式已注入
+    }
+
+    const styles = `
+       .ide-switcher-mcp-modal-overlay {
+         position: fixed;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         background-color: rgba(0, 0, 0, 0.5);
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         z-index: 10000;
+         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+       }
+
+       .ide-switcher-mcp-modal {
+         background-color: white;
+         border-radius: 8px;
+         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+         max-width: 600px;
+         width: 90%;
+         max-height: 80vh;
+         overflow-y: auto;
+       }
+
+       .ide-switcher-mcp-modal-header {
+         padding: 20px;
+         border-bottom: 1px solid #e1e4e8;
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+       }
+
+       .ide-switcher-mcp-modal-header h2 {
+         margin: 0;
+         font-size: 18px;
+         font-weight: 600;
+         color: #24292e;
+       }
+
+       .ide-switcher-mcp-modal-close {
+         background: none;
+         border: none;
+         cursor: pointer;
+         padding: 4px;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         color: #6a737d;
+         transition: color 0.2s;
+       }
+
+       .ide-switcher-mcp-modal-close:hover {
+         color: #24292e;
+       }
+
+       .ide-switcher-mcp-modal-content {
+         padding: 20px;
+         color: #24292e;
+         line-height: 1.6;
+       }
+
+       .ide-switcher-mcp-modal-intro {
+         margin: 0 0 20px 0;
+         font-size: 14px;
+         color: #586069;
+         padding: 12px;
+         background-color: #f6f8fa;
+         border-radius: 4px;
+       }
+
+       .ide-switcher-mcp-modal-content h3 {
+         margin: 20px 0 10px 0;
+         font-size: 15px;
+         font-weight: 600;
+       }
+
+       .ide-switcher-mcp-modal-content ol {
+         margin: 10px 0 20px 20px;
+         padding: 0;
+       }
+
+       .ide-switcher-mcp-modal-content li {
+         margin-bottom: 8px;
+         font-size: 14px;
+       }
+
+       .ide-switcher-mcp-modal-content code {
+         background-color: #f6f8fa;
+         border-radius: 3px;
+         padding: 2px 6px;
+         font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+         font-size: 13px;
+         color: #24292e;
+       }
+
+       .ide-switcher-mcp-modal-link {
+         color: #0366d6;
+         text-decoration: none;
+         border-bottom: 1px solid transparent;
+         transition: color 0.2s, border-bottom 0.2s;
+       }
+
+       .ide-switcher-mcp-modal-link:hover {
+         color: #0256c7;
+         border-bottom-color: #0366d6;
+       }
+
+       .ide-switcher-mcp-modal-footer {
+         margin-top: 20px;
+         padding-top: 20px;
+         border-top: 1px solid #e1e4e8;
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+       }
+
+       .ide-switcher-mcp-modal-button {
+         display: inline-block;
+         padding: 8px 16px;
+         background-color: #28a745;
+         color: white;
+         text-decoration: none;
+         border-radius: 4px;
+         font-size: 14px;
+         font-weight: 600;
+         transition: background-color 0.2s;
+         cursor: pointer;
+       }
+
+       .ide-switcher-mcp-modal-button:hover {
+         background-color: #218838;
+       }
+
+       .ide-switcher-mcp-modal-checkbox {
+         display: flex;
+         align-items: center;
+         gap: 8px;
+         cursor: pointer;
+         font-size: 13px;
+         user-select: none;
+       }
+
+       .ide-switcher-mcp-modal-checkbox input[type="checkbox"] {
+         cursor: pointer;
+         margin: 0;
+         width: 16px;
+         height: 16px;
+       }
+
+       @media (max-width: 600px) {
+         .ide-switcher-mcp-modal {
+           width: 95%;
+         }
+
+         .ide-switcher-mcp-modal-footer {
+           flex-direction: column;
+           gap: 12px;
+           align-items: stretch;
+         }
+
+         .ide-switcher-mcp-modal-button {
+           width: 100%;
+           text-align: center;
+         }
+       }
+     `;
+
+    const styleElement = document.createElement('style');
+    styleElement.id = styleId;
+    styleElement.textContent = styles;
+    document.head.appendChild(styleElement);
+  }
+
+  /**
+    * 顯示 MCP 安裝說明模態框
+    */
+  async function showMcpInstructionModal(serverName, repoUrl) {
+    // 檢查用戶是否已設定不再顯示
+    try {
+      const result = await chrome.storage.sync.get('mcpInstructionModalDismissed');
+      if (result.mcpInstructionModalDismissed) {
+        console.log('[IDE Switcher] 使用者已設定不再顯示 MCP 安裝說明');
+        // 直接重定向到 GitHub
+        window.location.href = repoUrl;
+        return;
+      }
+    } catch (error) {
+      console.error('[IDE Switcher] 無法讀取儲存設定:', error);
+    }
+
+    // 建立並顯示模態框
+    const modal = createMcpInstructionModal(serverName, repoUrl);
+    document.body.appendChild(modal);
+
+    // 等待用戶關閉模態框時重定向
+    const checkModalRemoved = setInterval(() => {
+      if (!document.body.contains(modal)) {
+        clearInterval(checkModalRemoved);
+        // 延遲重定向，避免與模態框關閉動作衝突
+        setTimeout(() => {
+          window.location.href = repoUrl;
+        }, 300);
+      }
+    }, 100);
+  }
+
+  /**
+    * 處理連結點擊事件
+    */
   async function handleClick(event) {
     const link = event.target.closest('a');
     if (!link) return;
@@ -353,25 +703,25 @@
         
         if (response && response.success) {
           console.log('[IDE Switcher] 擴充功能安裝成功');
-         } else if (response && response.error === 'Native Host not installed') {
-           // Native Host 未安裝，回退到 protocol URL
-           console.log('[IDE Switcher] Native Host 未安裝，嘗試使用 protocol URL');
-           const protocolUrl = targetProtocol === 'antigravity' 
-             ? `antigravity://${extensionId}` 
-             : `${getProtocolPrefix()}extension/${extensionId}`;
-           console.log(`[IDE Switcher] 重定向至: ${protocolUrl}`);
-           window.location.href = protocolUrl;
+        } else if (response && response.error === 'Native Host not installed') {
+          // Native Host 未安裝，回退到 protocol URL
+          console.log('[IDE Switcher] Native Host 未安裝，嘗試使用 protocol URL');
+          const protocolUrl = targetProtocol === 'antigravity' 
+            ? `antigravity://${extensionId}` 
+            : `${getProtocolPrefix()}extension/${extensionId}`;
+          console.log(`[IDE Switcher] 重定向至: ${protocolUrl}`);
+          window.location.href = protocolUrl;
         } else {
           console.error('[IDE Switcher] 安裝失敗:', response?.error);
         }
-       } catch (err) {
-         // 通訊失敗，回退到 protocol URL
-         console.error('[IDE Switcher] 無法連接 background script:', err);
-         const protocolUrl = targetProtocol === 'antigravity' 
-           ? `antigravity://${extensionId}` 
-           : `${getProtocolPrefix()}extension/${extensionId}`;
-         console.log(`[IDE Switcher] 回退到 protocol URL: ${protocolUrl}`);
-         window.location.href = protocolUrl;
+      } catch (err) {
+        // 通訊失敗，回退到 protocol URL
+        console.error('[IDE Switcher] 無法連接 background script:', err);
+        const protocolUrl = targetProtocol === 'antigravity' 
+          ? `antigravity://${extensionId}` 
+          : `${getProtocolPrefix()}extension/${extensionId}`;
+        console.log(`[IDE Switcher] 回退到 protocol URL: ${protocolUrl}`);
+        window.location.href = protocolUrl;
       }
       return;
     }
@@ -404,6 +754,42 @@
 
       window.location.href = protocolUrl;
       return;
+    }
+
+    // 處理 MCP URL (GitHub MCP Registry 使用)
+    if (isMcpUrl(href)) {
+      // 如果目標協議是 Antigravity，攔截並顯示安裝說明
+      if (targetProtocol === 'antigravity') {
+        const serverName = extractMcpServerName(href);
+        if (serverName) {
+          event.preventDefault();
+          event.stopPropagation();
+
+          console.log(`[IDE Switcher] 攔截 MCP URL: ${href}`);
+          console.log(`[IDE Switcher] MCP 伺服器: ${serverName}`);
+
+          // 取得 GitHub 倉庫 URL
+          const repoUrl = MCP_REPO_MAP[serverName];
+          if (repoUrl) {
+            // 顯示模態框並重定向
+            showMcpInstructionModal(serverName, repoUrl);
+          }
+          return;
+        }
+      } else {
+        // 對於其他 IDE，轉換協議後正常處理
+        const mcpUrl = convertToTargetUrl(href);
+        if (mcpUrl !== href) {
+          event.preventDefault();
+          event.stopPropagation();
+
+          console.log(`[IDE Switcher] 攔截 MCP URL: ${href}`);
+          console.log(`[IDE Switcher] 重定向至: ${mcpUrl}`);
+
+          window.location.href = mcpUrl;
+          return;
+        }
+      }
     }
 
     // 處理標準 vscode:// 協議連結

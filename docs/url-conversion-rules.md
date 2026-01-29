@@ -115,8 +115,10 @@ Antigravity IDE 的擴充安裝連結格式與其他 VS Code 系列 IDE 不同�
   - Antigravity 安裝範例（已編碼）
 
     ```
-    antigravity://extension/install?url=https%3A%2F%2Fopen-vsx.org%2Fapi%2Fpub%2Fext%2F1.2.3%2Ffile&name=publisher.extension&version=1.2.3
-    ```
+antigravity://extension/install?url=https%3A%2F%2Fopen-vsx.org%2Fapi%2Fpub%2Fext%2F1.2.3%2Ffile&name=publisher.extension&version=1.2.3
+```
+
+---
 
 - **若編輯器不支援協議**
   - 使用 CLI 或內建功能安裝 VSIX，例如 VS Code CLI：
@@ -175,6 +177,54 @@ Antigravity IDE 的擴充安裝連結格式與其他 VS Code 系列 IDE 不同�
 
 - **在 Antigravity 安裝來自 Open VSX 的 VSIX**
 
-  ```
-  antigravity://extension/install?url=https%3A%2F%2Fopen-vsx.org%2Fapi%2Fpub%2Fext%2F1.2.3%2Ffile&name=publisher.extension&version=1.2.3
-  ```
+```
+antigravity://extension/install?url=https%3A%2F%2Fopen-vsx.org%2Fapi%2Fpub%2Fext%2F1.2.3%2Ffile&name=publisher.extension&version=1.2.3
+```
+
+---
+
+## MCP URL Support
+
+### Overview
+GitHub MCP Registry uses URLs like `vscode:mcp/by-name/{server}` to install MCP servers. IDE-Link-Interceptor handles these URLs specially when the target IDE is Antigravity.
+
+### URL Formats
+
+**Format 1: By Name**
+```
+vscode:mcp/by-name/huggingface
+vscode-insiders:mcp/by-name/huggingface
+```
+
+**Format 2: API Path**
+```
+vscode:mcp/api.mcp.github.com/2025-09-15/v0/servers/huggingface/hf-mcp-server
+```
+
+### Behavior
+
+#### For Antigravity
+When target IDE is Antigravity:
+1. Intercept MCP URL
+2. Extract server name
+3. Show installation instruction modal
+4. Redirect to GitHub repository
+
+**Why**: Antigravity does NOT support MCP URL protocol handlers. It uses:
+- Built-in MCP Store UI
+- Manual JSON config file (`~/.gemini/antigravity/mcp_config.json`)
+
+#### For Other IDEs
+When target IDE is VS Code, Cursor, Windsurf:
+- Convert protocol normally (e.g., `vscode:mcp/...` → `cursor:mcp/...`)
+- Let the IDE handle MCP installation
+
+### Supported MCP Servers
+
+| Server Name | GitHub Repository |
+|-------------|-------------------|
+| `huggingface` | https://github.com/huggingface/hf-mcp-server |
+| `hf-mcp-server` | https://github.com/huggingface/hf-mcp-server |
+
+(More servers can be added to `MCP_REPO_MAP` in `content.js`)
+

@@ -1,81 +1,111 @@
-/* VS Code IDE Switcher - Modern Dark Theme */
+/* UI/UX Pro Max - Slate & Indigo Theme */
+/* Best viewed in VS Code with "Inter" or system fonts */
 
-/* Google Fonts - Inter */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 :root {
-  /* Default to Light Mode */
-  /* Color Palette */
-  --bg-primary: #ffffff;
-  --bg-card: #f3f4f6;
-  --bg-card-hover: #e5e7eb;
-  --bg-selected: rgba(66, 133, 244, 0.1);
+  /* --- Palette: Slate (Backgrounds/Neutrals) --- */
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+  --slate-900: #0f172a;
+  --slate-950: #020617;
 
-  /* Gradient - Light Mode 稍微淡一點 */
-  --gradient-primary: linear-gradient(135deg, #1a73e8 0%, #7b1fa2 100%);
+  /* --- Palette: Indigo/Violet (Primary/Accents) --- */
+  --indigo-500: #6366f1;
+  --indigo-600: #4f46e5;
+  --violet-500: #8b5cf6;
+  --violet-600: #7c3aed;
+
+  /* --- Palette: Semantic --- */
+  --emerald-500: #10b981; /* Success */
+  --amber-500: #f59e0b; /* Warning */
+  --rose-500: #f43f5e; /* Error */
+  --sky-500: #0ea5e9; /* Info/Checking */
+
+  /* --- Theming: Light Mode (Default) --- */
+  --bg-app: var(--slate-50);
+  --bg-card: #ffffff;
+  --bg-card-hover: var(--slate-50);
+  --bg-card-active: #f8fafc; /* Subtle press effect */
+
+  --text-main: var(--slate-800);
+  --text-muted: var(--slate-500);
+  --text-on-accent: #ffffff;
+
+  --border-subtle: var(--slate-200);
+  --border-focus: var(--indigo-500);
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(
+    135deg,
+    var(--indigo-600),
+    var(--violet-600)
+  );
   --gradient-glow: linear-gradient(
     135deg,
-    rgba(26, 115, 232, 0.2) 0%,
-    rgba(123, 31, 162, 0.2) 100%
+    rgba(99, 102, 241, 0.15),
+    rgba(139, 92, 246, 0.15)
   );
+  --gradient-surface: linear-gradient(to bottom, #ffffff, #f8fafc);
 
-  /* Text - High Contrast */
-  --text-primary: #1f2937;
-  --text-secondary: #4b5563;
-  --text-muted: #6b7280;
-  --text-warning: #4b5563; /* Footer text specific */
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-glow: 0 0 15px rgba(99, 102, 241, 0.25);
 
-  /* Border & Effects */
-  --border-color: #e5e7eb;
-  --border-hover: rgba(66, 133, 244, 0.5);
-  --border-selected: #1a73e8;
-
-  /* Status */
-  --success-color: #059669;
+  /* Border Radius */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
 
   /* Dimensions */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
+  --app-width: 280px; /* Slightly wider for breathing room */
 }
 
-/* Dark Mode Override */
+/* --- Theming: Dark Mode --- */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Color Palette - 調亮背景色增強對比 */
-    --bg-primary: #1e1e2e;
-    --bg-card: #2a2a3e;
-    --bg-card-hover: #3a3a52;
-    --bg-selected: rgba(66, 133, 244, 0.25);
+    --bg-app: var(--slate-950);
+    --bg-card: var(--slate-900);
+    --bg-card-hover: var(--slate-800);
+    --bg-card-active: var(--slate-800);
 
-    /* Gradient */
-    --gradient-primary: linear-gradient(135deg, #4285f4 0%, #7b1fa2 100%);
+    --text-main: var(--slate-100);
+    --text-muted: var(--slate-400);
+
+    --border-subtle: var(--slate-800);
+
+    /* Dark mode needs slightly more vibrant glows to be visible */
     --gradient-glow: linear-gradient(
       135deg,
-      rgba(66, 133, 244, 0.3) 0%,
-      rgba(123, 31, 162, 0.3) 100%
+      rgba(99, 102, 241, 0.25),
+      rgba(139, 92, 246, 0.25)
+    );
+    --gradient-surface: linear-gradient(
+      to bottom,
+      var(--slate-900),
+      var(--slate-950)
     );
 
-    /* Text */
-    --text-primary: #ffffff;
-    --text-secondary: #b0bec5;
-    --text-muted: #94a3b8;
-    --text-warning: #9ca3af; /* Lighter for dark mode footer */
-
-    /* Border & Effects - 增強邊框可見度 */
-    --border-color: rgba(255, 255, 255, 0.12);
-    --border-hover: rgba(66, 133, 244, 0.6);
-    --border-selected: rgba(66, 133, 244, 1);
-
-    /* Status */
-    --success-color: #10b981;
+    --shadow-md:
+      0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
   }
 }
 
+/* --- Reset & Base --- */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-font-smoothing: antialiased; /* Crisp text */
 }
 
 body {
@@ -84,136 +114,153 @@ body {
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
+    Roboto,
     sans-serif;
-  background: var(--bg-primary);
-  min-width: 240px;
-  max-width: 260px;
-  color: var(--text-primary);
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  width: var(--app-width);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+  overflow: hidden; /* Prevent scrollbars during animations */
 }
 
+/* --- Layout --- */
 .container {
-  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  gap: 12px;
+  min-height: 100vh; /* Fill full height available to popup */
 }
 
-/* Header */
-.header {
-  margin-bottom: 12px;
-}
-
-/* Title removed */
-
-.subtitle {
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-/* IDE List */
+/* --- IDE List --- */
 .ide-list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
-/* IDE Option Card */
+/* --- Card Component --- */
 .ide-option {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
-  background: var(--bg-card);
-  border: 1.2px solid var(--border-color);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: left;
+  gap: 12px;
+  padding: 10px 12px;
   width: 100%;
-  position: relative;
+
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+
+  cursor: pointer;
+  text-align: left;
+
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
 }
 
+/* Hover State */
+.ide-option:hover {
+  background-color: var(--bg-card-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--slate-300);
+}
+
+@media (prefers-color-scheme: dark) {
+  .ide-option:hover {
+    border-color: var(--slate-600);
+  }
+}
+
+/* Active/Selected State */
+.ide-option.selected {
+  background: var(--bg-card);
+  border-color: var(--indigo-500);
+  box-shadow: var(--shadow-glow), var(--shadow-sm);
+}
+
+/* Glow Effect Overlay */
 .ide-option::before {
   content: "";
   position: absolute;
   inset: 0;
   background: var(--gradient-glow);
   opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.ide-option:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--border-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 20px rgba(66, 133, 244, 0.15);
-}
-
-.ide-option:hover::before {
-  opacity: 0.3;
-}
-
-.ide-option.selected {
-  background: var(--bg-selected);
-  border-color: var(--border-selected);
-  box-shadow: 0 2px 6px rgba(66, 133, 244, 0.2);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
 .ide-option.selected::before {
-  opacity: 0.4;
+  opacity: 1;
 }
 
-/* IDE Icon */
+/* Active Press Effect */
+.ide-option:active {
+  transform: scale(0.98);
+  background-color: var(--bg-card-active);
+}
+
+/* --- Icons & Layout --- */
 .ide-icon {
-  width: 24px;
-  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 32px;
+  height: 32px;
+
+  background: var(--slate-100);
   border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.1);
   flex-shrink: 0;
-  position: relative;
-  z-index: 1;
+
+  transition: all 0.2s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ide-icon {
+    background: var(--slate-800);
+  }
+}
+
+.ide-option.selected .ide-icon {
+  background: white; /* Make icon pop on selected */
+}
+@media (prefers-color-scheme: dark) {
+  .ide-option.selected .ide-icon {
+    background: var(--slate-700);
+  }
 }
 
 .ide-icon svg {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
+  drop-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* IDE Info */
 .ide-info {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  position: relative;
-  z-index: 1;
+  justify-content: center;
 }
 
 .ide-name {
   font-size: 13px;
-  font-weight: 500;
-  color: var(--text-primary);
+  font-weight: 600;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
 }
 
-/* Check Icon */
 .check-icon {
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: var(--emerald-500);
+  width: 18px;
+  height: 18px;
   opacity: 0;
-  transform: scale(0.8);
-  transition: all 0.2s ease;
-  position: relative;
-  z-index: 1;
-}
-
-.check-icon svg {
-  width: 14px;
-  height: 14px;
-  color: var(--success-color);
+  transform: scale(0.5);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy spring */
 }
 
 .ide-option.selected .check-icon {
@@ -221,69 +268,144 @@ body {
   transform: scale(1);
 }
 
-/* Footer */
+/* --- Status Indicators --- */
+.ide-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--slate-300);
+
+  transition: all 0.3s ease;
+  box-shadow: 0 0 0 2px var(--bg-card); /* Ring effect */
+}
+
+.ide-status--registered {
+  background-color: var(--emerald-500);
+  box-shadow:
+    0 0 0 2px var(--bg-card),
+    0 0 4px var(--emerald-500);
+}
+
+.ide-status--missing {
+  background-color: var(--amber-500);
+  box-shadow:
+    0 0 0 2px var(--bg-card),
+    0 0 4px var(--amber-500);
+}
+
+.ide-status--checking {
+  background-color: var(--sky-500);
+  animation: pulse-ring 1.5s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(14, 165, 233, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(14, 165, 233, 0);
+  }
+}
+
+/* --- Footer & Fix Section --- */
 .footer {
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid var(--border-color);
-  display: flex;
-  align-items: center;
-  justify-content: center; /* 改為居中 */
+  margin-top: auto; /* Push to bottom */
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+  text-align: center;
 }
 
 .warning-text {
-  font-size: 10px;
-  color: var(--text-warning); /* 使用專為可讀性設計的變數 */
-  opacity: 1; /* 移除透明度以確保清晰 */
-  text-align: center;
+  font-size: 11px;
+  color: var(--rose-500); /* Error color for warnings */
+  font-weight: 500;
+  margin-bottom: 8px;
+  min-height: 14px; /* Prevent layout jump */
+}
+
+/* Fix Button */
+.fix-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  animation: slide-up 0.3s ease-out;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fix-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
   width: 100%;
+  padding: 8px 16px;
+
+  background: var(--gradient-primary);
+  color: white;
+
+  border: none;
+  border-radius: var(--radius-sm);
+
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+
+  cursor: pointer;
+  box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+  transition: all 0.2s ease;
 }
 
-/* Animation */
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.02);
-  }
-  100% {
-    transform: scale(1);
-  }
+.fix-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 12px -1px rgba(79, 70, 229, 0.3);
 }
 
-.ide-option.just-selected {
-  animation: pulse 0.25s ease;
+.fix-button:active {
+  transform: translateY(0);
 }
 
-/* Accessibility */
-.ide-option:focus {
-  outline: 2px solid var(--border-selected);
-  outline-offset: 2px;
+.fix-button:disabled {
+  background: var(--slate-300);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
-.ide-option:focus:not(:focus-visible) {
-  outline: none;
+.fix-status {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.fix-status.success {
+  color: var(--emerald-500);
+}
+.fix-status.error {
+  color: var(--rose-500);
 }
 
-/* Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-  .ide-option,
-  .check-icon,
-  .ide-option::before {
-    transition: none;
-  }
-
-  .ide-option.just-selected {
-    animation: none;
-  }
+/* --- Utility --- */
+.hidden {
+  display: none !important;
 }
 
-/* SVG Gradient Stops */
+/* SVG Gradients for Icons */
 .gradient-stop-start {
-  stop-color: #4285f4;
+  stop-color: var(--indigo-500);
 }
-
 .gradient-stop-end {
-  stop-color: #7b1fa2;
+  stop-color: var(--violet-500);
 }

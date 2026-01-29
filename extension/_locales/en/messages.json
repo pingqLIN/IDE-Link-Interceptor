@@ -58,5 +58,29 @@
     "notificationInstalledTo": {
         "message": "installed to",
         "description": "Text between extension ID and IDE name in success notification"
+    },
+    "statusRegistered": {
+        "message": "Registered",
+        "description": "Tooltip when IDE protocol is registered"
+    },
+    "statusNotRegistered": {
+        "message": "Not registered",
+        "description": "Tooltip when IDE protocol is not registered"
+    },
+    "statusChecking": {
+        "message": "Checking...",
+        "description": "Tooltip when checking IDE protocol status"
+    },
+    "fixRegistration": {
+        "message": "Fix Registration",
+        "description": "Button text to fix protocol registration"
+    },
+    "fixSuccess": {
+        "message": "Protocol registered successfully!",
+        "description": "Message when protocol registration succeeds"
+    },
+    "fixFailed": {
+        "message": "Registration failed. Please check if the IDE is installed.",
+        "description": "Message when protocol registration fails"
     }
 }

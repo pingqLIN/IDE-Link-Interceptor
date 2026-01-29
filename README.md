@@ -36,6 +36,7 @@ A browser extension that intercepts IDE hyperlinks (`vscode://`, `cursor://`, `w
 - 🚀 **No Browser Prompts** - Eliminates the "Open Visual Studio Code?" dialog
 - 📦 **Extension & VSIX Support** - Opens extension pages in your chosen IDE; right-click `.vsix` files for direct installation
 - 🔧 **MCP Server Installation** - Intercepts MCP install links (including Cursor's special deeplink format) and redirects to your IDE
+- ✅ **MCP URL Support**: Handles GitHub MCP Registry URLs with Antigravity-specific instructions
 - 💾 **Remember Your Choice** - Your IDE selection is saved and persists across browsing sessions
 
 > **Note:** When clicking "Install" on VS Code Marketplace extensions, the extension page will open in your chosen IDE. Due to security limitations in all VS Code-based IDEs, you'll need to click "Install" once more inside the IDE to complete the installation.
